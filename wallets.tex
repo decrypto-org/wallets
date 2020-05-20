@@ -119,7 +119,11 @@ That is, every bchd full node is also a Neutrino server.
 The homonymous Neutrino wallet for Android is the only known implementation in practice.
 \section{Privacy Wallets}
 In this section we will discuss wallets for ZCash, one of the most prominent private cryptocurrencies.
+
+We first examine the requirements for a ZCash wallet to be functional. To create a new transaction sending funds to some party, the wallet needs to know the unspent outputs belonging to the user. From these outputs the amount and some auxillary values must be discovered, in order to allow the wallet to create a nullifier for the commitment and spend it. In order to create a valid transaction with a valid Zero Knowledge proof the wallet also needs to know the full contents of the commitment tree, to prove that they are spending a commitment included in that tree.
+
 \subsection{Full Node}
+The full node wallet works in a straightforward manner. All blocks and transactions are assumed to be already downloaded and verified locally. Upon being presented with a seed, the wallet evaluates every transaction for relevance. Outputs to the shielded address are decryptable by the secret key corresponding to that shielded address.
 \subsection{SPV}
 \subsubsection{Compact Blocks}
 \subsection{MyMonero}
