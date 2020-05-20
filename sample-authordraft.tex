@@ -1,0 +1,138 @@
+%\documentclass[sigconf,authordraft]{acmart}
+\documentclass[sigconf]{acmart}
+
+\begin{document}
+
+\title{A Taxonomy of Cryptocurrency Wallets}
+
+\author{Kostis Karantias}
+\affiliation{\institution{IOHK}}
+\email{kostis.karantias@iohk.io}
+
+\renewcommand{\shortauthors}{Karantias}
+
+\begin{abstract}
+    The primary function of a cryptocurrency is money transfer between individuals. The \emph{wallet} is the software that facilitates such transfers. Wallets are nowadays ubiquitous in the cryptocurrency space and a cryptocurrency is usually supported by many wallets. Despite that, the functionality of wallets has never been formally defined. Additionally, the mechanisms employed by the many wallets in the wild remain hidden in their respective codebases.
+    
+    In this work we provide the first definition of a cryptocurrency wallet. We provide a distinction of wallets in various categories, based on their whether they work for transparent or private cryptocurrencies, what trust assumptions they require, their performance and their communication overhead. For each type of wallet we provide a pseudocode implementation. Additionally, we explore the \emph{light wallets} and describe their difference to \emph{light clients} that have appeared in recent literature. Finally, we prove that light wallets are infeasible in private cryptocurrencies like ZCash.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+\section{Definitions}
+\begin{definition}
+    A cryptocurrency wallet $W_\text{seed}$ is a pair of algorithms (\textsf{Sync}, \textsf{History}, \textsf{Spend}).
+    
+    $\mathsf{Sync}(\text{state}) \rightarrow \text{state}'$: Takes a user's cryptocurrency seed and the wallet state$'$ and produces a new wallet state' after interacting with network participants. We denote the initial state as $\varepsilon$.
+    
+    $\mathsf{History}(\text{state}) \rightarrow 2^\textsc{TXs}$: Returns the transaction history for the wallet seed.
+    
+    $\mathsf{Spend}(\text{state}, \text{txDescription}) \rightarrow \text{tx}$: Takes a transaction description txDescription and returns a valid transaction tx that spends from funds owned by the wallet's seed.
+\end{definition}
+
+\paragraph{Computational Complexity.} Computation to restore from a seed.
+\paragraph{Communication Complexity.} Bandwidth to restore from a seed.
+\paragraph{Privacy.} Do we disclose any private key to an external participant or server?
+
+\section{Functionality}
+Intuitively, the wallet should offer 2 important functions. Given a seed and the ability of network interactions, it should present the user with:
+
+\begin{itemize}
+    \item Their balance.
+    \item Their transaction history.
+    \item The ability to create new valid transactions, given a description.
+\end{itemize}
+
+\subsection{UTXO-based}
+For UTXO-based cryptocurrencies like Bitcoin, by knowing a seed's UTXO the wallet can know the balance and be able to create valid new transactions.
+
+\subsection{Account-based}
+For account-based cryptocurrencies like Ethereum, ...
+
+\subsection{Privacy coins}
+
+\section{Transparent Wallets}
+
+In order to be functional in a UTXO-based cryptocurrency, the wallet needs to obtain the UTXO subset belonging to the user's seed. This will allow the user to know their balance and be able to create new transactions. In order to know their transaction history, the user must evaluate all transaction outputs in history to detect incoming payments and all transaction inputs to detect outgoing payments.
+
+\subsection{Full Node}
+%Full node wallets plug directly to a full node. The full node 
+The best known example of a full node wallet is Bitcoin-Qt.
+
+A full node contains in its state the complete chain with full blocks, that include all of their transactions. In addition, the chain is assumed to be verified for validity.
+
+\paragraph{Transaction history \& Spending.}
+When presented with a seed, the full node wallet starts evaluating all transactions in every block from genesis up to the tip to detect which ones implicate the user's seed. This process is linear in the chain size, henceforth $O(n)$.
+
+\paragraph{Only Balance \& Spending (Pruned mode).}
+When presented with a seed in pruned mode, a full node wallet can only evaluate all outputs in the UTXO to detect the user's current spendable balance. In this way, the transaction history is not known but new transactions can be generated without a problem. One shortcoming of this approach is the additional assumption that we know the maximum nonce in use with the user's seed. We must assume a maximum nonce in order to generate a list of possible addresses of the user and scan the UTXO for outputs directed to them.
+
+If the UTXO is stored as a list, then every entry must be checked, which yields performance of $O(|utxo|)$. However, the UTXO can easily be indexed by address, which makes detection $O(maxnonce)$.
+\subsection{SPV}
+SPV was first described in the Bitcoin whitepaper.
+%TODO: cite satoshi
+The idea is as follows, a light node only requests and holds the header chain, that is only the header part of each block (which in Bitcoin is 80 bytes) and not the full block. When someone wishes to prove a transaction took place to an SPV node, they need to provide (a) the transaction (b) the id of the block that contains it and (c) a Merkle proof of inclusion to the Merkle root included in said block. The SPV node can check that the claimed block is part of its local best header chain and the Merkle proof provided is valid against the block's Merkle root.
+
+Using this functionality of an SPV node as a building block, we examine how an SPV wallet can be built. In Bitcoin an SPV wallet works as follows. The SPV wallet connects with the full node network. There, it establishes connection with some peer node. It then announces a bloom filter including the initial address generated by invoking $\text{KDF}(seed, 0)$ to the connected node via a \texttt{filterload} call. After that it starts invoking \texttt{getblock} calls to the peer, starting from the first block with transactions that may implicate the user's seed. If no such block is known, or the best tip block tip is not already known by other means, the first block is set to the genesis. For every block the peer returns, it scans each transaction for matches to the set bloom filter. To the wallet, the block header is sent along with the transactions. Finally for verification, a multi-element Merkle proof of inclusion (named Partial Merkle Tree in BIP-37) for all the matching transactions is also sent. The wallet repeats \texttt{getblock} calls until it reaches the blockchain tip. By that point and assuming an honest peer, the full transaction history is known, along with the balance, and new transactions can be successfully created.
+
+%TODO: talk about incrementing the nonce
+%TODO: talk about server-side bloom filter alteration
+
+The only well known SPV wallet in practice is Andreas Schildbach's Android Bitcoin wallet.
+
+Note that the protocol may seem wasteful, especially in case the header chain is already synced as it forces us to re-download the whole header chain. Additionally, it may seem wasteful that the peer needs to process every single transaction in history in order to service the peer. These inefficiencies are mitigated in the next protocol we are going to discuss.
+
+%TODO: talk about how the server can withhold transactions
+
+\subsection{Electrum}
+Electrum is probably the most well-known wallet for Bitcoin.
+The protocol it utilizes is as followed. First, an honest remote peer is assumed. The peer however speaks a different protocol specified by Electrum.
+In Electrum, servers hold an address index over all historical transactions.
+%TODO: Cite Electrum server software
+The wallet first asks the peer for all headers, which are provided in packed format. It then verifies the headers' validity. Subsequently it makes use of the \texttt{blockchain.scripthash.get\_history} API call to obtain all transactions concerning every possible address of the user, incrementing the KDF nonce until no more transactions are found. For each of these transactions it can opt to verify a Merkle proof of inclusion for some block in its local chain, after requesting it via \texttt{blockchain.transaction.get\_merkle}.
+\footnote{The full API offered by an Electrum server is shown in \url{https://electrumx.readthedocs.io/en/latest/protocol-methods.html}.
+%TODO: Cite
+}
+
+We remark that the Electrum protocol is more efficient than the previous SPV wallet solution. Unfortunately, this comes at the cost of directly revealing the user's addresses to the remote peer. An Electrum server customarily maintains an address index for all historical transactions, making servicing the \texttt{get\_history} very efficient, in contrast with the heavy work a full node has to do to service an SPV wallet.
+\subsection{Neutrino}
+Neutrino is a new proposal for more efficient light syncing on Bitcoin which aims to be an improvement over SPV. Initially proposed for Lightning, it provides a nice solution for light wallets. It is described in BIP-157, BIP-158.
+
+Neutrino requires a consensus change or soft fork, yet to occur for Bitcoin. With this change, in every block a small bytearray is included which represents information about the block's transactions. Specifically, the bytearray which is called the \emph{filter} is a Golomb-Coded Set
+%TODO: cite
+which encodes the set of all output scripts and the scripts of the outputs the inputs spend (except \texttt{OP\_RETURN}s for technical reasons).
+
+With this filter in place the light wallet works as follows. Initially, it downloads all block headers as usual and verifies them. Then it proceeds to download the filter corresponding to each block. It then checks locally for every block if it contains transactions of interest by making use of the filter. If a block contains transactions of interest, all its transactions are requested without witness data (e.g. signatures and data belonging to unlocking scripts). Then from the transactions obtained the wallet can only keep the actual transactions of interest and discard the rest.
+
+The improvements over SPV are twofold:
+\paragraph{Privacy.} In an SPV wallet, the transactions of interest to the wallet are directly leaked to the peer, except with some relative deniability due to the bloom filter's false positive rate. Due to the low false positive rate of a bloom filter and the widely known transaction linking heuristics that can be applied
+%cite meiklejohn
+%cite On the Privacy Provisions of Bloom Filters in Lightweight Bitcoin Clients
+the peer can be almost certain which transactions belong to the same entity, breaking the pseudonymity of Bitcoin.
+\paragraph{Performance.} Observe how in Neutrino the server does no special computation for each client in contrast with an SPV server. In Neutrino servers are essentially relays of information, which is much cheaper and makes it more appealing to operators to operate them. Additionally in contrast with SPV, if the wallet happens to hold the header-chain through some means, it can just obtain the filters without the need to redownload the already downloaded headers as is the case with SPV.
+
+Neutrino is currently deployed on Bitcoin Cash and integrated in the bchd full node.
+%todo: Cite
+That is, every bchd full node is also a Neutrino server.
+The homonymous Neutrino wallet for Android is the only known implementation in practice.
+\section{Privacy Wallets}
+In this section we will discuss wallets for ZCash, one of the most prominent private cryptocurrencies.
+\subsection{Full Node}
+\subsection{SPV}
+\subsubsection{Compact Blocks}
+\subsection{MyMonero}
+
+\begin{acks}
+\end{acks}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{sample-base}
+
+\appendix
+
+\section{Appendix Section 1}
+
+\end{document}
+\endinput
