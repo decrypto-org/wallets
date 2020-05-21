@@ -152,7 +152,7 @@ MyMonero works differently when the user creates a new seed and when the user re
 In the case of recovering from an existing seed there are two cases. Either the server already knows the corresponding viewing private key, in which case it can directly relay the transactions it knows, or the key is presented to the server for the first time. If the latter case holds, the server will take on the difficult task of looking through each transaction from the genesis up to the tip in order to detect transactions sent to the user. However, because of the computational difficulty of the task, it will request that the user pledges to send back a small reward for the server in the form of Monero before starting.
 %TODO: explain how
 
-The server is a full-node that maintains the whole chain and its tip. When a client requests their transactions and only then does it scan the blocks starting from the last processed block for the requested viewing key up until the tip.
+The server is a full-node that maintains the whole chain and its tip. Only when a client requests their transactions it scans the blocks starting from the last processed block for the requested viewing key up until the tip.
 
 \begin{acks}
 \end{acks}
