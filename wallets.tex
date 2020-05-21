@@ -141,7 +141,8 @@ This is a backwards-compatible change to the ZCash network that does not require
 
 If a client detects an inbound or outgoing payment of interest, it can then request the full transaction from the server.
 %TODO: what can a server do?
-%TODO: verification against the commitment tree in lieu of wtxid
+
+This compression of the transactions is lossy and means that the transactions inclusion in the claimed block header can't be verified via a Merkle proof in the same way it can be verified on transparent SPV. This is because the hash of the original transaction cannot be reproduced unless the full transaction is owned, which defeats the purpose. However, a similar verification can be performed as follows. Every shielded output references a new commitment. ZCash in its block header includes a Merkle Tree root of the existing commitment set after adding all commitments the transactions of the block itself create. Thus even though transactions themselves cannot be verified as valid, shielded outputs can by verifying a Merkle inclusion proof of inclusion of the commitment in the Merkle Tree root of commitments. For the inputs no processing needs to be done. If an input reveals a note belonging to the user then this note can be marked as spent as the only person who would be able to reveal the note is the user itself and it can't be faked by any server. If an input reveals a note belonging to someone else the server has nothing to gain by tricking the wallet into thinking it is revealed in a block where it is not. Cases of double-spending by an adversarial server are completely thwarted by the output verification.
 
 We remark that this is not an asymptotic improvement over the theoretical SPV solution. We posit that an asymptotic improvement over the theoretical SPV solution which preserves privacy (i.e. no private keys are revealed to the remote peer) cannot exist.
 \subsection{MyMonero}
