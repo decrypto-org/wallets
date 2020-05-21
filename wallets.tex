@@ -100,7 +100,7 @@ Electrum is probably the most well-known wallet for Bitcoin.
 The protocol it utilizes is as followed. First, an honest remote peer is assumed. The peer however speaks a different protocol specified by Electrum.
 In Electrum, servers hold an address index over all historical transactions.
 %TODO: Cite Electrum server software
-The wallet first asks the peer for all headers, which are provided in packed format. It then verifies the headers' validity. Subsequently it makes use of the \texttt{blockchain.scripthash.get\_history} API call to obtain all transactions concerning every possible address of the user, incrementing the KDF nonce until no more transactions are found. For each of these transactions it can opt to verify a Merkle proof of inclusion for some block in its local chain, after requesting it via \texttt{blockchain.transaction.get\_merkle}.
+The wallet first asks the peer for all headers, which are provided in packed format. It then verifies the headers' validity. Subsequently it makes use of the \texttt{blockchain.scripthash.\allowbreak get\_history} API call to obtain all transactions concerning every possible address of the user, incrementing the KDF nonce until no more transactions are found. For each of these transactions it can opt to verify a Merkle proof of inclusion for some block in its local chain, after requesting it via \texttt{blockchain.transaction.\allowbreak get\_merkle}.
 \footnote{The full API offered by an Electrum server is shown in \url{https://electrumx.readthedocs.io/en/latest/protocol-methods.html}.
 %TODO: Cite
 }
