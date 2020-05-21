@@ -123,10 +123,36 @@ In this section we will discuss wallets for ZCash, one of the most prominent pri
 We first examine the requirements for a ZCash wallet to be functional. To create a new transaction sending funds to some party, the wallet needs to know the unspent outputs belonging to the user. From these outputs the amount and some auxillary values must be discovered, in order to allow the wallet to create a nullifier for the commitment and spend it. In order to create a valid transaction with a valid Zero Knowledge proof the wallet also needs to know the full contents of the commitment tree, to prove that they are spending a commitment included in that tree.
 
 \subsection{Full Node}
-The full node wallet works in a straightforward manner. All blocks and transactions are assumed to be already downloaded and verified locally. Upon being presented with a seed, the wallet evaluates every transaction for relevance. Outputs to the shielded address are decryptable by the secret key corresponding to that shielded address.
+The full node wallet works in a straightforward manner. All blocks and transactions are assumed to be already downloaded and verified locally. Upon being presented with a seed, the wallet evaluates every transaction from the genesis up to the tip for relevance. Outputs to the shielded address are decryptable by the secret key corresponding to that shielded address.
+
+When evaluating an output, it may be directed to a shielded address of the user. In that case we store the commitment and private values of the output. When evaluating an input, it may be that the user has spent a previous commentment, in which case we mark the commitment as spent. Additionally for every input and output we store the transaction to display to the user.
+
+Finally, we end up with a set of unspent commitments along with their private values. Given a transaction description the wallet can then spend any of those unspent commitments.
+
 \subsection{SPV}
+SPV nodes for private cryptocurrencies don't exist in practice due to the detection problem. Private cryptocurrencies are designed to make it hard to detect receivers of transactions. Thus a helpful server who has the chain that is able to detect transactions on account of a user is orthogonal to the design of the cryptocurrency.
+
+A hypothetical SPV wallet however, could avoid performing verification of the chain contents (the transactions) and only perform verification of the header-chain. While this does not reduce the bandwidth requirements of an SPV wallet, it could significantly reduce the computation time for syncing. This is especially important in the case of ZCash where verifying the validity of a zero-knowledge proof of a transaction may take time in the order of milliseconds.
+
 \subsubsection{Compact Blocks}
+In ZIP-307 an optimization for bandwidth is proposed. The optimization lies in noticing that since under the assumption of SPV security transactions don't need to be verified, transactions only need to hold the minimum amount of data such that they are detectable. By only keeping this data, transactions are compressed. Block headers remain unchanged. The new block structure including these compressed transactions is dubbed a compact block.
+
+This is a backwards-compatible change to the ZCash network that does not require any consensus changes. Blocks are adapted to this compact block format by any interested server and are subsequently relayed to any clients that request them.
+
+If a client detects an inbound or outgoing payment of interest, it can then request the full transaction from the server.
+%TODO: what can a server do?
+%TODO: verification against the commitment tree in lieu of wtxid
+
+We remark that this is not an asymptotic improvement over the theoretical SPV solution. We posit that an asymptotic improvement over the theoretical SPV solution which preserves privacy (i.e. no private keys are revealed to the remote peer) cannot exist.
 \subsection{MyMonero}
+A final solution for private cryptocurrencies observed in practice comes from Monero. MyMonero is a desktop and mobile wallet that operates with the help of a trusted server. The viewing private key is disclosed to the server so that it can detect transactions on the wallet's behalf. Any detected transactions are relayed to the wallet in order for the wallet to display and for the wallet to hold an up-to-date UTXO for the purposes of creating new transactions.
+
+MyMonero works differently when the user creates a new seed and when the user recovers their wallet with an existing seed. When creating a new seed, the viewing private key is disclosed but because the server knows the key was just generated they can be certain that it has never received any transactions.
+
+In the case of recovering from an existing seed there are two cases. Either the server already knows the corresponding viewing private key, in which case it can directly relay the transactions it knows, or the key is presented to the server for the first time. If the latter case holds, the server will take on the difficult task of looking through each transaction from the genesis up to the tip in order to detect transactions sent to the user. However, because of the computational difficulty of the task, it will request that the user pledges to send back a small reward for the server in the form of Monero before starting.
+%TODO: explain how
+
+The server is a full-node that maintains the whole chain and its tip. When a client requests their transactions and only then does it scan the blocks starting from the last processed block for the requested viewing key up until the tip.
 
 \begin{acks}
 \end{acks}
