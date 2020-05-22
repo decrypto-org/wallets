@@ -123,6 +123,12 @@ Neutrino is currently deployed on Bitcoin Cash and integrated in the bchd full n
 %todo: Cite
 That is, every bchd full node is also a Neutrino server.
 The homonymous Neutrino wallet for Android is the only known implementation in practice.
+
+\subsection{Metamask}
+Metamask is Ethereum's most widely used wallet. It does not connect to full nodes or peers that relay block headers, only to a blockchain explorer. It requests the user's transactions from the explorer, but does not verify that the transactions are all included in blocks in the best chain. From them the wallet determines the necessary nonce by computing the number of outgoing transactions, which is all the information necessary in order to create valid new transactions. It also computes the balance and can show the transaction history. Since no transaction verification is taking place, the explorer is a trusted third party.
+
+Most other wallets that have seen wide use follow Metamask's model, including Exodus, Yoroi and others. Additionally, the apps that utilize hardware wallets like Ledger and Trezor work in this manner.
+
 \section{Privacy Wallets}
 In this section we will discuss wallets for ZCash, one of the most prominent private cryptocurrencies.
 
