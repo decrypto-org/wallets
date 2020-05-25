@@ -1,5 +1,8 @@
 %\documentclass[sigconf,authordraft]{acmart}
 \documentclass[sigconf]{acmart}
+\usepackage[capitalise]{cleveref}
+\usepackage{adjustbox}
+\usepackage{array}
 
 \begin{document}
 
@@ -169,6 +172,44 @@ The server is a full-node that maintains the whole chain and its tip. Only when 
 
 \section{Double-spend attacks}
 \section{Finney attacks}
+
+\section{Comparison}
+\newcolumntype{R}[2]{%
+    >{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}%
+    l%
+    <{\egroup}%
+}
+\newcommand*\rot{\multicolumn{1}{R{45}{1em}}}% no optional argument here, please!
+
+\def\half{\char9680}
+\def\full{\char9679}
+
+\begin{table*}
+\caption{A comparison of the cryptocurrency wallets in practice. Server computation only refers to the computation the server is required to do to serve a new wallet and does not include previous or continuous computation like maintaining an address index.\label{comparison}}
+\centering
+\begin{tabular}{|r|ccc|cccc|}
+\multicolumn{1}{c}{} &
+\rot{Bandwidth} &
+\rot{Client computation} &
+\rot{Server computation*} &
+\rot{Open participation} &
+\rot{Address leakage} &
+\rot{Double-spendable} &
+\rot{Invalid tx acceptance}
+\\ \hline
+\emph{Proposal}&\multicolumn{3}{c|}{\emph{Performance}}&\multicolumn{4}{c|}{\emph{Security}} \\
+\hline
+%name    &bandwidt&client  &server  &open &leak &doubl&inval
+Full Node&$O(n+m)$&$O(n+m)$&$O(1)$  &\full&     &     &     \\
+SPV      &$O(n+y)$&$O(n+y)$&$O(n+m)$&\full&\half&     &     \\
+Electrum &$O(n+y)$&$O(n+y)$&$O(1)$  &     &\full&\half&     \\
+Neutrino &$O(n+y)$&$O(n+y)$&$O(1)$  &\full&\half&     &     \\
+Metamask &$O(y)$  &$O(1)$  &$O(1)$  &     &\full&\full&\full\\
+\hline
+\end{tabular}
+\end{table*}
+
+A comparison of the wallets can be seen in \cref{comparison}.
 
 \section{From Light Clients to Light Wallets}
 
