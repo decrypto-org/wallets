@@ -101,13 +101,12 @@ Note that the protocol may seem wasteful, especially in case the header chain is
 \subsection{Electrum}
 %TODO: checkpoints
 Electrum is probably the most well-known wallet for Bitcoin.
-The protocol it utilizes is as followed. First, the wallet connects to 10 peers chosen from a hardcoded list in the software. One of them is selected as primary at random. The peers speak a protocol specified by Electrum and not the full node protocol.
+The protocol it utilizes is as follows. First, the wallet connects to 10 peers chosen from a hardcoded list in the software. One of them is selected as primary at random. The peers speak a protocol specified by Electrum and not the full node protocol.
 In Electrum, servers hold an address index over all historical transactions. In early versions~\cite{electrumserver} of the server the index was arranged in a Merkle Patricia Trie~\cite{ultimate}. The most widely used server implementation~\cite{electrumserverrust} does not arranging the index in this way and simply relies on an underlying key-value store.
-%TODO: headers from all peers are gotten
-The wallet first asks the peer for all headers, which are provided in packed format. It then verifies the headers' validity. Subsequently it makes use of the \texttt{blockchain.scripthash.\allowbreak get\_history} API call to obtain all transactions concerning every possible address of the user, incrementing the KDF nonce until no more transactions are found. For each of these transactions it can opt to verify a Merkle proof of inclusion for some block in its local chain, after requesting it via \texttt{blockchain.transaction.\allowbreak get\_merkle}.
-\footnote{The full API offered by an Electrum server is shown in \url{https://electrumx.readthedocs.io/en/latest/protocol-methods.html}.
-%TODO: Cite
-}
+
+The wallet obtains all the header-chains advertised by its peers and verifies their Proof-of-Work. It then only keeps the heaviest valid chain for further processing. Subsequently it makes use of the \texttt{block\-chain.\allowbreak script\-hash.\allowbreak get\_history}
+\footnote{The full API offered by an Electrum server is shown in \url{https://electrumx.readthedocs.io/en/latest/protocol-methods.html}}
+API call to obtain all transactions concerning every possible address of the user, incrementing the KDF nonce until no more transactions are found. For each of these transactions it requires a Merkle proof of inclusion that is valid against some block in the heaviest chain.
 
 We remark that the Electrum protocol is more efficient than the previous SPV wallet solution. Unfortunately, this comes at the cost of directly revealing the user's addresses to the remote peer. An Electrum server customarily maintains an address index for all historical transactions, making servicing the \texttt{get\_history} very efficient, in contrast with the heavy work a full node has to do to service an SPV wallet.
 \subsection{Neutrino}
