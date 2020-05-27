@@ -99,10 +99,11 @@ Note that the protocol may seem wasteful, especially in case the header chain is
 %TODO: talk about how the server can withhold transactions
 
 \subsection{Electrum}
+%TODO: checkpoints
 Electrum is probably the most well-known wallet for Bitcoin.
-The protocol it utilizes is as followed. First, an honest remote peer is assumed. The peer however speaks a different protocol specified by Electrum.
-In Electrum, servers hold an address index over all historical transactions.
-%TODO: Cite Electrum server software
+The protocol it utilizes is as followed. First, the wallet connects to 10 peers chosen from a hardcoded list in the software. One of them is selected as primary at random. The peers speak a protocol specified by Electrum and not the full node protocol.
+In Electrum, servers hold an address index over all historical transactions. In early versions~\cite{electrumserver} of the server the index was arranged in a Merkle Patricia Trie~\cite{ultimate}. The most widely used server implementation~\cite{electrumserverrust} does not arranging the index in this way and simply relies on an underlying key-value store.
+%TODO: headers from all peers are gotten
 The wallet first asks the peer for all headers, which are provided in packed format. It then verifies the headers' validity. Subsequently it makes use of the \texttt{blockchain.scripthash.\allowbreak get\_history} API call to obtain all transactions concerning every possible address of the user, incrementing the KDF nonce until no more transactions are found. For each of these transactions it can opt to verify a Merkle proof of inclusion for some block in its local chain, after requesting it via \texttt{blockchain.transaction.\allowbreak get\_merkle}.
 \footnote{The full API offered by an Electrum server is shown in \url{https://electrumx.readthedocs.io/en/latest/protocol-methods.html}.
 %TODO: Cite
@@ -202,7 +203,7 @@ The server is a full-node that maintains the whole chain and its tip. Only when 
 %name    &bandwidt&client  &server  &open &leak &doubl&inval
 Full Node&$O(n+m)$&$O(n+m)$&$O(1)$  &\full&     &     &     \\
 SPV      &$O(n+y)$&$O(n+y)$&$O(n+m)$&\full&\half&     &     \\
-Electrum &$O(n+y)$&$O(n+y)$&$O(1)$  &     &\full&\half&     \\
+Electrum &$O(n+y)$&$O(n+y)$&$O(1)$  &     &\full&     &     \\
 Neutrino &$O(n+y)$&$O(n+y)$&$O(1)$  &\full&\half&     &     \\
 Metamask &$O(y)$  &$O(1)$  &$O(1)$  &     &\full&\full&\full\\
 \hline
