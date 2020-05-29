@@ -69,17 +69,27 @@ Intuitively, the wallet should offer 2 important functions. Given a seed and the
     \item The ability to create new valid transactions, given a description.
 \end{itemize}
 
-\subsection{UTXO-based}
-For UTXO-based cryptocurrencies like Bitcoin, by knowing a seed's UTXO the wallet can know the balance and be able to create valid new transactions.
-
 \subsection{Account-based}
 For account-based cryptocurrencies like Ethereum, ...
 
 \subsection{Privacy coins}
 
-\section{Transparent Wallets}
+\section{Transparent UTXO Wallets}
 
-In order to be functional in a UTXO-based cryptocurrency, the wallet needs to obtain the UTXO subset belonging to the user's seed. This will allow the user to know their balance and be able to create new transactions. In order to know their transaction history, the user must evaluate all transaction outputs in history to detect incoming payments and all transaction inputs to detect outgoing payments.
+A transaction description specifies the desired outputs of a transaction and a fee. In the simplest case of sending some some funds to a specific address, a transaction description of one outputs is appropriate, where that output is a regular P2PKH output sending value to that address.
+
+A wallet needs to be able to turn a transaction description into a valid transaction that will be accepted by full nodes in a process called funding. To fund a transaction description, the wallet performs the following steps:
+
+\begin{itemize}
+    \item Collect a set $S$ of unspent transaction outputs spendable by public keys derivable from the seed such that $$\sum_{o \in S} o.\text{value} \ge \textsf{value}$$
+    \item Create a change output directed back to a public key derivable by the seed such that
+    $$\sum_{input} input.\text{value} - \sum_{output} output.\text{value} = \textsf{fee}$$
+    \item For each unspent transaction output in $S$, generate its unlocking script and use it as an input. In the typical case the unlocking script includes the signature of said transaction with the secret key of said output recipient.
+\end{itemize}
+
+The balance of a wallet can be obtained as the sum of the values of all unspent outputs destined to public keys derivable from the seed.
+
+The transaction history of a wallet can be extracted from the set of all transactions implicating public keys derivable from the seed. Specifically, inputs where are spent by some private key derivable from the seed are debits, and outputs which are directed to some public key derivable from the seed are credits.
 
 \subsection{Full Node}
 %Full node wallets plug directly to a full node. The full node 
