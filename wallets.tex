@@ -128,12 +128,14 @@ With this filter in place the light wallet works as follows. Initially, it downl
 The improvements over SPV are twofold:
 \paragraph{Privacy.} In an SPV wallet, the transactions of interest to the wallet are directly leaked to the peer, except with some relative deniability due to the bloom filter's false positive rate. Due to the low false positive rate of a bloom filter and the widely known transaction linking heuristics that can be applied~\cite{meiklejohn2013fistful,gervais2014privacy}
 the peer can be almost certain which transactions belong to the same entity, breaking the pseudonymity of Bitcoin.
-\paragraph{Performance.} Observe how in Neutrino the server does no special computation for each client in contrast with an SPV server. In Neutrino servers are essentially relays of information, which is much cheaper and makes it more appealing to operators to operate them. Additionally in contrast with SPV, if the wallet happens to hold the header-chain through some means, it can just obtain the filters without the need to redownload the already downloaded headers as is the case with SPV.
+\paragraph{Server performance.} Observe how in Neutrino the server does no special computation for each client in contrast with an SPV server. In Neutrino servers are essentially relays of information, which is much cheaper and makes it more appealing to operators to operate them.
+\paragraph{Client performance.} Additionally in contrast with SPV, if the wallet happens to hold the header-chain through some means, it can just obtain the filters without the need to redownload the already downloaded headers as is the case with SPV.
 
-Neutrino is currently deployed on Bitcoin Cash and integrated in the bchd full node.
-%todo: Cite
-That is, every bchd full node is also a Neutrino server.
-The homonymous Neutrino wallet for Android is the only known implementation in practice.
+However these improvements come at the cost of bandwidth. For each block its corresponding filter must be downloaded to detect relevant transactions in that block. The filter size for a 1.4MB block is approximately 20KB~\cite{jimmysong}. This is a significant overhead compared to SPV, where no such filter needs to be downloaded.
+
+Neutrino is currently implemented in the bchd full node~\cite{bchd}, giving an easy option to any bchd full node to act as a Neutrino server if they so desire.
+
+The homonymous Neutrino wallet for Android is the only known client implementation.
 
 \subsection{Metamask}
 Metamask is Ethereum's most widely used wallet. It does not connect to full nodes or peers that relay block headers, only to a blockchain explorer. It requests the user's transactions from the explorer, but does not verify that the transactions are all included in blocks in the best chain. From them the wallet determines the necessary nonce by computing the number of outgoing transactions, which is all the information necessary in order to create valid new transactions. It also computes the balance and can show the transaction history. Since no transaction verification is taking place, the explorer is a trusted third party.
