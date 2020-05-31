@@ -233,7 +233,36 @@ Metamask &$O(y)$  &$O(1)$  &$O(1)$  &     &\full&\full&\full\\
 \end{tabular}
 \end{table*}
 
-A comparison of the wallets can be seen in \cref{comparison}.
+We use the following variables for our asymptotic analysis:
+\begin{itemize}
+    \item $n$: number of all blocks
+    \item $m$: number of all transaction
+    \item $y$: number of relevant transactions (implicating the wallet user)
+\end{itemize}
+
+Our performance comparison is asymptotic in terms of the aforementioned variables and is broken down on the following aspects.
+
+\begin{itemize}
+    \item \textbf{Bandwidth}: The bandwidth necessary to fully synchronise a wallet from scratch.
+    \item \textbf{Server computation}: Any computation necessary for the server to perform in order to aid the synchronisation of a new wallet.
+    \item \textbf{Client computation}: Any computation it is necessary for the wallet to perform in order to finish synchronisation and enter a usable state (for funding transaction descriptions, balance and transaction history).
+\end{itemize}
+
+Our security comparison focuses on the following aspects.
+\begin{itemize}
+    \item \textbf{Open participation}: Whether participating as a wallet's server is possible for everyone.
+    \item \textbf{Address leakage}: Whether the wallet reveals information about the user's addresses to any server in order to synchronise.
+    \item \textbf{Double-spendable}: Whether any server can successfully mount a double-spend attack on the user through the wallet.
+    \item \textbf{Invalid transaction acceptance}: Whether the wallet may accept transactions that are not part of the best chain.
+\end{itemize}
+
+A comparison of the wallets in tabular form is presented in \cref{comparison}.
+
+\subsection{Full Node}
+The full node requires the most amount of bandwidth, $O(n+m)$ as all full blocks must be downloaded. The amount of client computation is identical as every block and transaction needs to be verified. However, for servicing the full node other nodes need not perform any special computation and can simply act as relays. The network of a permisionless cryptocurrency's full node is open to participation by definition. No information pertaining to the wallet addresses can be produced by the network based on what subset of transactions the full node downloads, as it downloads all of them. Additionally the full node never explicitly advertises its addresses. Similarly as it verifies all blocks it is not vulnerable to double-spend or invalid transaction acceptance attacks.
+
+\subsection{BIP-37 SPV}
+For SPV the bandwidth is $O(n+y)$. $O(n)$ due to all block headers and $O(y)$ due to all (hopefully) relevant transactions downloaded. For each block header verification takes place and for each relevant transaction verification of its attached Merkle proof takes place, thus client computation is also $O(n+y)$. BIP-37 SPV's weak point is in server computation however, as the server looks though every single transaction in history to evaluate if it matches the bloom filter or not, thus it has the worst server computation complexity of all proposals, $O(n+m)$. Again, any full node can participate in the BIP-37 SPV network as a server. Addresses are not directly provided to the server, and some of the transactions detected as relevant by the server may not actually implicate the user, due to the bloom filter's false positive rate. The false positive rate is configurable and privacy-minded users may set a high false positive rate so as to create noise, but this comes at the cost of bandwidth. We conclude that this proposal does leak information about the user's addresses to the server. Double-spending and invalid transaction acceptance attacks are infeasible due to SPV security, which states that as long as the adversarial mining power is upper bounded by $50\%$ of the total mining power the block contents of the stable part of the best chain are valid.
 
 \section{From Light Clients to Light Wallets}
 
