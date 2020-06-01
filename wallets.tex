@@ -150,10 +150,10 @@ Neutrino is currently implemented in the bchd full node~\cite{bchd}, giving an e
 
 The homonymous Neutrino wallet for Android is the only known client implementation.
 
-\subsection{Metamask}
-Metamask is Ethereum's most widely used wallet. It does not connect to full nodes or peers that relay block headers, only to a blockchain explorer. It requests the user's transactions from the explorer, but does not verify that the transactions are all included in blocks in the best chain. From them the wallet determines the necessary nonce by computing the number of outgoing transactions, which is all the information necessary in order to create valid new transactions. It also computes the balance and can show the transaction history. Since no transaction verification is taking place, the explorer is a trusted third party.
+\subsection{Yoroi}
+Yoroi is Cardano's most widely used wallet. It does not connect to full nodes or peers that relay block headers, only to a blockchain explorer. It requests the user's transactions from the explorer, but does not verify that the transactions are all included in blocks in the best chain. From them the wallet determines the UTXO set and can thus fund transaction descriptions, compute the balance and show the transaction history. Since no transaction verification is taking place, the explorer is a trusted third party.
 
-Most other wallets that have seen wide use follow Metamask's model, including Exodus, Yoroi and others. Additionally, the apps that utilize hardware wallets like Ledger and Trezor work in this manner.
+Most wallets that have seen wide use follow Yoroi's model, including Exodus. Additionally, the apps that utilize hardware wallets like Ledger and Trezor work in this manner.
 
 \section{Privacy Wallets}
 In this section we will discuss wallets for ZCash, one of the most prominent private cryptocurrencies.
@@ -228,7 +228,7 @@ Full Node&$O(n+m)$&$O(n+m)$&$O(1)$  &\full&     &     &     \\
 SPV      &$O(n+y)$&$O(n+y)$&$O(n+m)$&\full&\half&     &     \\
 Electrum &$O(n+y)$&$O(n+y)$&$O(y)$  &     &\full&     &     \\
 Neutrino &$O(n+y)$&$O(n+y)$&$O(1)$  &\full&\half&     &     \\
-Metamask &$O(y)$  &$O(1)$  &$O(1)$  &     &\full&\full&\full\\
+Yoroi    &$O(y)$  &$O(y)$  &$O(y)$  &     &\full&\full&\full\\
 \hline
 \end{tabular}
 \end{table*}
@@ -269,6 +269,9 @@ In Electrum the client receives all chain headers similar to BIP-37 SPV, and the
 
 \subsection{Neutrino}
 Neutrino downloads all chain headers and for each transaction of interest the full block it belongs to, yielding $O(n+y)$ bandwidth. The client needs to verify the header chain, compare its filter to each block filter to detect relevant transactions and verify the full blocks received match the corresponding blocks in the header chain, yielding a client computation of $O(n+y)$. The strong point of Neutrino is server computation. The server simply acts as a relay of information so the computation is constant. Neutrino is planned to be integrated in the full node P2P protocol which makes participation open. Addresses are not leaked directly, however full blocks are only received when they contain transactions of interest which could yield some information about the identity of the client to an adversary. Due to SPV security other attacks are impossible.
+
+\subsection{Yoroi}
+Yoroi only downloads purported relevant transactions from the explorer, which is $O(y)$. It simply stores the transactions and maintains a UTXO set, which yields $O(y)$ computation on the client. The server simply looks up the transactions of the provided addresses on an index and returns all of them, resulting in $O(y)$ computation. As the server address is hardcoded in the software, this is not a P2P protocol and participation is not open. Addresses are leaked directly to the server. The client does not perform any check that the transactions are actually valid or that they belong in the best chain, thus a double spend attack is feasible.
 
 \section{From Light Clients to Light Wallets}
 
