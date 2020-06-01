@@ -121,6 +121,8 @@ A valid transaction according to a state can be applied to it to generate a new 
     \end{algorithmic}
 \end{algorithm}
 
+Coinbase transactions could exist in account-based cryptocurrencies, for example having a \sender field of all zeros. In practice Ethereum-based cryptocurrencies don't have them but instead directly include the miner's address inside the block header. For our purposes we will not consider the change of state due to miner rewards.
+
 \section{Functionality}
 Intuitively, the wallet should offer 2 important functions. Given a seed and the ability of network interactions, it should present the user with:
 
