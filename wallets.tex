@@ -95,6 +95,7 @@ In the account model, a transfer transaction consists of a sender, a receiver, a
 \def\sender{\mathtt{sender}}
 \def\receiver{\mathtt{receiver}}
 \def\amount{\mathtt{amount}}
+\def\fee{\mathtt{fee}}
 \def\nonce{\text{nonce}}
 \def\balance{\text{balance}}
 \def\ethstate{\sigma}
@@ -105,7 +106,7 @@ For a transfer transaction to be valid with respect to a state $\ethstate$, the 
     \item The nonce must be equal to $\ethstate[\sender].\nonce + 1$.
     \item The sender must have adequate balance.
     \[
-        \ethstate[\sender].\balance \ge \amount
+        \ethstate[\sender].\balance \ge \amount+\fee
     \]
 \end{itemize}
 
