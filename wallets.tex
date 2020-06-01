@@ -107,7 +107,7 @@ We remark that the nonce is necessary in order to avoid replay attacks, for if i
 
 \def\ethapply{\text{apply}}
 
-A valid transaction according to a state can be applied to it to generate a new state. We perform this state transformation with a function $\ethapply(\ethstate, tx)$. The definition of $\ethapply$ is given in \cref{alg.ethapply}.
+A valid transaction according to a state can be applied to it to generate a new state. We perform this state transformation with a function $\ethapply(\ethstate, tx)$ which debits the receiver, credits the sender and increments the sender's nonce. The full definition of $\ethapply$ is given in \cref{alg.ethapply}.
 
 \begin{algorithm}[H]
     \caption{\label{alg.ethapply} The $\ethapply$ function given a $\ethstate$ and a transaction.}
