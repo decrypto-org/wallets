@@ -74,7 +74,7 @@ For account-based cryptocurrencies like Ethereum, ...
 
 \subsection{Privacy coins}
 
-\section{Transparent UTXO Wallets}
+\section{Transparent UTXO-based Wallets}
 
 A transaction description specifies the desired outputs of a transaction and a fee. In the simplest case of sending some funds to a specific address, the transaction description is comprised of a single P2PKH output.
 
@@ -272,6 +272,20 @@ Neutrino downloads all chain headers and for each transaction of interest the fu
 
 \subsection{Yoroi}
 Yoroi only downloads purported relevant transactions from the explorer, which is $O(y)$. It simply stores the transactions and maintains a UTXO set, which yields $O(y)$ computation on the client. The server simply looks up the transactions of the provided addresses on an index and returns all of them, resulting in $O(y)$ computation. As the server address is hardcoded in the software, this is not a P2P protocol and participation is not open. Addresses are leaked directly to the server. The client does not perform any check that the transactions are actually valid or that they belong in the best chain, thus a double spend attack is feasible.
+
+\section{Transparent Account-based Wallets}
+
+Because in the account model there is no need for change outputs, new addresses are not automatically derived by wallets. New addresses are derived and used only by the explicit request of the user. Traditionally account-based wallets only hold a single address and public key, and we will assume the same in this section for simplification.
+
+A transaction description is comprised of the address of the recipient and an amount of cryptocurrency. The funding process consists of the following steps:
+
+\begin{itemize}
+    \item Filling in a valid address corresponding to a public key that (a) holds more cryptocurrency in its balance than what will be spent in the transaction and (b) is derivable from the seed.
+    \item Filling in the valid nonce in order to make this transaction spendable.
+    \item Signing the transaction with the appropriate secret key.
+\end{itemize}
+
+The transaction can subsequently be broadcast and accepted by the network.
 
 \section{From Light Clients to Light Wallets}
 
