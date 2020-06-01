@@ -1,5 +1,8 @@
 %\documentclass[sigconf,authordraft]{acmart}
 \documentclass[sigconf]{acmart}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\algrenewcommand\textproc{} % disable textsc on function names
 \usepackage[capitalise]{cleveref}
 \usepackage{adjustbox}
 \usepackage{array}
@@ -13,6 +16,11 @@
 \hyphenation{dec-red}
 \hyphenation{poly-no-mi-al}
 \hyphenation{Mer-kle}
+\newcommand{\pluseq}{\texttt{\,+=\,}}
+\newcommand{\minuseq}{\texttt{\,-=\,}}
+\newcommand{\stareq}{\texttt{\,*=\,}}
+\newcommand{\slasheq}{\texttt{\,/=\,}}
+\newcommand{\plusplus}{\texttt{++}}
 
 \begin{document}
 
@@ -96,6 +104,22 @@ For a transfer transaction to be valid with respect to a state $\ethstate$, the 
 \end{itemize}
 
 We remark that the nonce is necessary in order to avoid replay attacks, for if it was absent some receiver would be able to repeat the same transaction ad infinitum until the sender account is completely drained. Note that a potential solution to this would be to maintain a set of processed transaction ids and add a requirement that the transaction to be evaluated for validity does not belong in that set. If the sender ever wishes to send the same amount to the same recipient, they will need to generate a new signature and thus the transaction will have a different transaction id. In theory this solution stands, however in practice due to the malleability of ECDSA a signature can be modified in a way that it changes and consequently the transaction id changes, while retaining its validity.
+
+\def\ethapply{\text{apply}}
+
+A valid transaction according to a state can be applied to it to generate a new state. We perform this state transformation with a function $\ethapply(\ethstate, tx)$. The definition of $\ethapply$ is given in \cref{alg.ethapply}.
+
+\begin{algorithm}[H]
+    \caption{\label{alg.ethapply} The $\ethapply$ function given a $\ethstate$ and a transaction.}
+    \begin{algorithmic}[1]
+        \Function{$\ethapply$}{$\ethstate, tx$}
+            \State{$\plusplus\sigma[tx.\sender].\nonce$}
+            \State{$\sigma[tx.\sender].\balance \minuseq tx.\amount$}
+            \State{$\sigma[tx.\receiver].\balance \pluseq tx.\amount$}
+            \State\Return{$\sigma$}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 \section{Functionality}
 Intuitively, the wallet should offer 2 important functions. Given a seed and the ability of network interactions, it should present the user with:
