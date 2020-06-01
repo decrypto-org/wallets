@@ -116,7 +116,7 @@ In the account model, a transfer transaction consists of a sender, a receiver, a
 \def\fee{\mathtt{fee}}
 \def\nonce{\text{nonce}}
 \def\balance{\text{balance}}
-\def\ethstate{\sigma}
+\def\ethstate{\sigma_\text{eth}}
 For a transfer transaction to be valid with respect to a state $\ethstate$, the following conditions need to hold. We assume a function $\state(\chain)$ that returns the state of the world according to $\chain$. With $\ethstate[\mathtt{address}]$ we denote the state of the account with the specified address.
 
 \begin{itemize}
@@ -130,7 +130,7 @@ For a transfer transaction to be valid with respect to a state $\ethstate$, the 
 
 We remark that the nonce is necessary in order to avoid replay attacks, for if it was absent some receiver would be able to repeat the same transaction ad infinitum until the sender account is completely drained. Note that a potential solution to this would be to maintain a set of processed transaction ids and add a requirement that the transaction to be evaluated for validity does not belong in that set. If the sender ever wishes to send the same amount to the same recipient, they will need to generate a new signature and thus the transaction will have a different transaction id. In theory this solution stands, however in practice due to the malleability of ECDSA a signature can be modified in a way that it changes and consequently the transaction id changes, while retaining its validity.
 
-\def\ethapply{\text{apply}}
+\def\ethapply{\text{apply}\textsubscript{eth}}
 
 A valid transaction according to a state can be applied to it to generate a new state. We perform this state transformation with a function $\ethapply(\ethstate, tx)$ which debits the receiver, credits the sender and increments the sender's nonce. The full definition of $\ethapply$ is given in \cref{alg.ethapply}.
 
@@ -138,10 +138,10 @@ A valid transaction according to a state can be applied to it to generate a new 
     \caption{\label{alg.ethapply} The $\ethapply$ function given a $\ethstate$ and a transaction.}
     \begin{algorithmic}[1]
         \Function{$\ethapply$}{$\ethstate, tx$}
-            \State{$\plusplus\sigma[tx.\sender].\nonce$}
-            \State{$\sigma[tx.\sender].\balance \minuseq tx.\amount$}
-            \State{$\sigma[tx.\receiver].\balance \pluseq tx.\amount$}
-            \State\Return{$\sigma$}
+            \State{$\plusplus\ethstate[tx.\sender].\nonce$}
+            \State{$\ethstate[tx.\sender].\balance \minuseq tx.\amount$}
+            \State{$\ethstate[tx.\receiver].\balance \pluseq tx.\amount$}
+            \State\Return{$\ethstate$}
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
