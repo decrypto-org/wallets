@@ -404,7 +404,21 @@ Metamask connects to a trusted web3 server and communicates with it over JSON-RP
 
 An explorer is used in order to obtain the transaction history, namely Etherscan.
 
-\section{From Light Clients to Light Wallets}
+\section{Light Wallets}
+\begin{definition}
+A wallet is called \emph{light} if it can be usable in all 3 aspects (transaction description funding, balance and transaction history) by having a communication complexity of $o(n+m)$.
+%TODO: not right. I need to talk about how many blocks, how much data and how much auxillary information must be transmitted, which doesn't seem like it can be captured very well with asymptotics.
+\end{definition}
+
+\begin{definition}
+A \emph{light client} is an ITM that after communicating with a set of parties $P$ of which at least one is honest, can determine by using $o(n)$ of communication:
+\begin{enumerate}
+    \item The tip of the honest chain.
+    \item The inclusion of some block in the honest chain.
+\end{enumerate}
+\end{definition}
+
+A parallel must be drawn to the verifier in~\cite{nipopows}. The verifier is non-interactive whereas we also allow interactive protocols for a light client. In NIPoPoWs a proof for the tip of the chain is called a suffix proof and a proof for the inclusion of some block in a chain is called an infix proof. A final difference is that in NIPoPoWs the proof size is fixed as $O(polylog(n))$ whereas our definition is more general, allowing any sublinear proof size.
 
 \begin{acks}
 \end{acks}
