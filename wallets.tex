@@ -23,6 +23,13 @@
 \newcommand{\plusplus}{\texttt{++}}
 \newcommand{\cupeq}{\texttt{\,$\cup$=\,}}
 
+\usepackage{fontspec}
+\setmonofont[
+  Scale=MatchLowercase,
+  FakeStretch=0.85,
+]{DejaVu Sans Mono}
+\newfontface{\freeserif}{FreeSerif}
+
 \begin{document}
 
 \title{A Taxonomy of Cryptocurrency Wallets}
@@ -293,8 +300,8 @@ The server is a full-node that maintains the whole chain and its tip. Only when 
 }
 \newcommand*\rot{\multicolumn{1}{R{45}{1em}}}% no optional argument here, please!
 
-\def\half{\char9680}
-\def\full{\char9679}
+\def\half{{\freeserif \char9680}}
+\def\full{{\freeserif \char9679}}
 
 \begin{table*}
 \caption{A comparison of the cryptocurrency wallets in practice. Server computation only refers to the computation the server is required to do to serve a new wallet and does not include previous or continuous computation like maintaining an address index. Partial vulnerability to an attack is denoted with \half{} and full vulnerability is denoted with \full.\label{comparison}}
