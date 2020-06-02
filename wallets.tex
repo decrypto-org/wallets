@@ -155,6 +155,25 @@ A valid transaction according to a state can be applied to it to generate a new 
 
 Coinbase transactions could exist in account-based cryptocurrencies, for example having a $\sender$ field of all zeros. In practice Ethereum-based cryptocurrencies don't have them but instead directly include the miner's address inside the block header. For our purposes we will not consider the change of state due to miner rewards.
 
+\subsection{SPV Security}
+\begin{definition}[SPV client]
+An \emph{SPV client} is an ITM that knows a genesis block \textsf{Gen} connects to a set of full nodes $\mathcal{P}$, at least one of which is honest. It may only request block headers at a range of heights. It obtains all header-chains $\chain_1, \dots, \chain_{|\mathcal{P}|}$, keeping only those for which the chain structure holds ($\forall 1 < i \le |\chain|: H(\chain[i-1]) = \chain[i].previd$). It subsequently compares them and adopts the chain with the most difficulty.
+\end{definition}
+
+We state some theorems pertaining to the adopted chain of an SPV client which are derivable from the works of~\cite{backbone,garay2017bitcoin,pass2017analysis}.
+
+\begin{definition}[Honest Majority Assumption]
+The adversarial mining power is at all times upper bounded by the half of the total mining power of the network.
+\end{definition}
+
+\begin{theorem}[SPV Security]
+Under the honest majority assumption, the stable part of an SPV client's adopted chain $\chain[:-k]$ is a prefix of the chain of the honest full node.
+\end{theorem}
+
+\begin{corollary}
+Under the honest majority assumption, the underlying full chain of the stable part of an SPV client's adopted chain is syntactically valid.
+\end{corollary}
+
 \section{Functionality}
 Intuitively, the wallet should offer three important functions. Given a seed and the ability of network interactions, it should present the user with:
 
