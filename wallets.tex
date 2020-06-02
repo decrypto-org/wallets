@@ -115,7 +115,7 @@ In the account model, a transfer transaction consists of a sender, a receiver, a
 \def\amount{\mathtt{amount}}
 \def\fee{\mathtt{fee}}
 \def\nonce{\text{nonce}}
-\def\balance{\text{balance}}
+\def\bal{\text{balance}}
 \def\ethstate{\sigma_\text{eth}}
 For a transfer transaction to be valid with respect to a state $\ethstate$, the following conditions need to hold. We assume a function $\state(\chain)$ that returns the state of the world according to $\chain$. With $\ethstate[\mathtt{address}]$ we denote the state of the account with the specified address.
 
@@ -124,7 +124,7 @@ For a transfer transaction to be valid with respect to a state $\ethstate$, the 
     \item The nonce must be equal to $\ethstate[\sender].\nonce + 1$.
     \item The sender must have adequate balance.
     \[
-        \ethstate[\sender].\balance \ge \amount+\fee
+        \ethstate[\sender].\bal \ge \amount+\fee
     \]
 \end{itemize}
 
@@ -139,8 +139,8 @@ A valid transaction according to a state can be applied to it to generate a new 
     \begin{algorithmic}[1]
         \Function{$\ethapply$}{$\ethstate, tx$}
             \State{$\plusplus\ethstate[tx.\sender].\nonce$}
-            \State{$\ethstate[tx.\sender].\balance \minuseq tx.\amount$}
-            \State{$\ethstate[tx.\receiver].\balance \pluseq tx.\amount$}
+            \State{$\ethstate[tx.\sender].\bal \minuseq tx.\amount$}
+            \State{$\ethstate[tx.\receiver].\bal \pluseq tx.\amount$}
             \State\Return{$\ethstate$}
         \EndFunction
     \end{algorithmic}
