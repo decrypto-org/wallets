@@ -162,11 +162,11 @@ An \emph{SPV client} is an ITM that knows a genesis block \textsf{Gen} connects 
 
 We state some theorems pertaining to the adopted chain of an SPV client which are derivable from the works of~\cite{backbone,garay2017bitcoin,pass2017analysis}.
 
-\begin{definition}[Honest Majority Assumption]
+\begin{definition}[Honest majority assumption]
 The adversarial mining power is at all times upper bounded by the half of the total mining power of the network.
 \end{definition}
 
-\begin{theorem}[SPV Security]
+\begin{theorem}[SPV security]
 Under the honest majority assumption, the stable part of an SPV client's adopted chain $\chain[:-k]$ is a prefix of the chain of the honest full node.
 \end{theorem}
 
@@ -419,12 +419,12 @@ Metamask connects to a trusted web3 server and communicates with it over JSON-RP
 An explorer is used in order to obtain the transaction history, namely Etherscan.
 
 \section{Light Wallets}
-\begin{definition}
+\begin{definition}[Light wallet]
 A wallet is called \emph{light} if it can be usable in all 3 aspects (transaction description funding, balance and transaction history) by having a communication complexity of $o(n+m)$.
 %TODO: not right. I need to talk about how many blocks, how much data and how much auxillary information must be transmitted, which doesn't seem like it can be captured very well with asymptotics.
 \end{definition}
 
-\begin{definition}
+\begin{definition}[Light client]
 A \emph{light client} is an ITM that after communicating with a set of parties $P$ of which at least one is honest, can determine by using $o(n)$ of communication:
 \begin{enumerate}
     \item The tip of the honest chain.
