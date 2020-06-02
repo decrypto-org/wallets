@@ -378,11 +378,15 @@ A transaction description is comprised of the address of the recipient, an amoun
 %TODO cite
 To fund a transaction description the wallet performs the following steps:
 
-\begin{itemize}
-    \item Fill in a valid address corresponding to a public key that (a) holds at least as much cryptocurrency in its balance than what will be spent in the transaction and (b) is derivable from the seed.
+\begin{enumerate}
+    \item Fill in a valid address corresponding to a public key that:
+    \begin{enumerate}
+        \item holds at least as much cryptocurrency in its balance than what will be spent in the transaction and
+        \item is derivable from the seed.
+    \end{enumerate}
     \item Fill in the valid nonce in order to make this transaction spendable.
     \item Sign the transaction with the appropriate secret key.
-\end{itemize}
+\end{enumerate}
 
 The transaction can subsequently be broadcast and accepted by the network.
 
