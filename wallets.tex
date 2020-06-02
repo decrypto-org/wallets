@@ -390,6 +390,20 @@ To fund a transaction description the wallet performs the following steps:
 
 The transaction can subsequently be broadcast and accepted by the network.
 
+We remark that an account-based wallet may offer limited functionality. For example, having access to the state it is easy to know the nonce and balance of any address of interest, thus funding a transaction description is straightforward. State however does not allow us to obtain the transaction history.
+
+\subsection{Full Node}
+A full node has access to the complete state and the full chain (i.e. all blocks and all their transactions), after a sync. For each derivable address, its balance and nonce can be looked up directly from the state. To obtain the transaction history for a set of addresses, every tranaction from the genesis block up to the tip must be checked.
+
+\subsection{Metamask}
+Metamask connects to a trusted web3 server and communicates with it over JSON-RPC in order to
+\begin{enumerate}
+    \item query the address' balance (via \texttt{getBalance})
+    \item obtain the address' nonce (via \texttt{getTransactionCount})
+\end{enumerate}
+
+An explorer is used in order to obtain the transaction history, namely Etherscan.
+
 \section{From Light Clients to Light Wallets}
 
 \begin{acks}
