@@ -329,19 +329,19 @@ The server is a full-node that maintains the whole chain and its tip. Only when 
 \rot{Client computation} &
 \rot{Server computation*} &
 \rot{Open participation} &
-\rot{Address leakage} &
-\rot{Double-spendable} &
-\rot{Invalid tx acceptance} &
+\rot{Privacy} &
+\rot{No double-spend advantage} &
+\rot{Only valid transactions} &
 \rot{Uncensorability}
 \\ \hline
 \emph{Proposal}&\multicolumn{3}{c|}{\emph{Performance}}&\multicolumn{5}{c|}{\emph{Security}} \\
 \hline
-%name    &bandwidt&client  &server  &open &leak &doubl&inval&uncen
-Full Node&$O(n+m)$&$O(n+m)$&$O(1)$  &\full&     &     &     &\full\\
-SPV      &$O(n+y)$&$O(n+y)$&$O(n+m)$&\full&\half&     &     &     \\
-Electrum &$O(n+y)$&$O(n+y)$&$O(y)$  &     &\full&     &     &     \\
-Neutrino &$O(n+y)$&$O(n+y)$&$O(1)$  &\full&\half&     &     &\full\\
-Yoroi    &$O(y)$  &$O(y)$  &$O(y)$  &     &\full&\full&\full&     \\
+%name    &bandwidt&client  &server  &open &priva&dblad&onval&uncen
+Full Node&$O(n+m)$&$O(n+m)$&$O(1)$  &\full&\full&\full&\full&\full\\
+SPV      &$O(n+y)$&$O(n+y)$&$O(n+m)$&\full&\half&\full&\full&     \\
+Electrum &$O(n+y)$&$O(n+y)$&$O(y)$  &     &     &\full&\full&     \\
+Neutrino &$O(n+y)$&$O(n+y)$&$O(1)$  &\full&\half&\full&\full&\full\\
+Yoroi    &$O(y)$  &$O(y)$  &$O(y)$  &     &     &     &     &     \\
 \hline
 \end{tabular}
 \end{table*}
@@ -364,9 +364,9 @@ Our performance comparison is asymptotic in terms of the aforementioned variable
 Our security comparison focuses on the following aspects.
 \begin{itemize}
     \item \textbf{Open participation}: Whether participating as a wallet's server is possible for everyone.
-    \item \textbf{Address leakage}: Whether the wallet reveals information about the user's addresses to any server in order to synchronise.
-    \item \textbf{Double-spendable}: Whether any server can successfully mount a double-spend attack on the user through the wallet.
-    \item \textbf{Invalid transaction acceptance}: Whether the wallet may accept transactions that are not part of the best chain.
+    \item \textbf{Privacy}: Whether the wallet reveals information about the user's addresses to any server in order to synchronise.
+    \item \textbf{No double-spend advantage}: Whether any server has an advantage over any other network participant to perform a double-spend attack on the user through the wallet.
+    \item \textbf{Only valid transactions}: Whether the wallet may accept transactions that are not part of the best chain.
     \item \textbf{Uncensorability}: Whether the server can censor transactions.
 \end{itemize}
 
