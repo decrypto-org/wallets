@@ -81,7 +81,7 @@ Usability is one of the most important obstacles in the adoption of cryptocurren
 \subsection{The UTXO Model}
 In the UTXO model a transaction consists of inputs and outputs. An output consists of an amount and a locking script (called \texttt{scriptPubKey} in Bitcoin). In Bitcoin the locking script is described in a stack-based language called Bitcoin Script. An input consists of an unlocking script (called \texttt{scriptSig} in Bitcoin) and an output pointer (also called an outpoint) which is a tuple of the form (\texttt{txID}, \texttt{outputIndex}). We say that an input \emph{spends} an output, where \texttt{txID} refers to the transaction id that includes the output and \texttt{outputIndex} refers to the zero-based index of the output to be spent in that transaction.
 
-\def\btcstate{\sigma_\text{btc}}
+\def\btcstate{\ensuremath{\sigma_\text{btc}}}
 \def\btcapply{\text{apply}\textsubscript{btc}}
 \def\outputs{\texttt{outputs}}
 \def\inputs{\texttt{inputs}}
@@ -116,14 +116,14 @@ Money generation happens with coinbase transactions. A coinbase transaction is a
 In the account model, a transfer transaction consists of a sender, a receiver, an amount, a nonce, a fee and a signature. The sender and receiver are public keys. The fee acts as an additional miner reward as in the UTXO model.
 
 \def\state{\text{state}}
-\def\chain{\mathcal{C}}
+\def\chain{\ensuremath{\mathcal{C}}}
 \def\sender{\texttt{sender}}
 \def\receiver{\texttt{receiver}}
 \def\amount{\texttt{amount}}
 \def\fee{\texttt{fee}}
 \def\nonce{\text{nonce}}
 \def\bal{\text{balance}}
-\def\ethstate{\sigma_\text{eth}}
+\def\ethstate{\ensuremath{\sigma_\text{eth}}}
 For a transfer transaction to be valid with respect to a state $\ethstate$, the following conditions need to hold. We assume a function $\state(\chain)$ that returns the state of the world according to $\chain$. With $\ethstate[\texttt{address}]$ we denote the state of the account with the specified address.
 
 \begin{itemize}
