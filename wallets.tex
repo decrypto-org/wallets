@@ -435,6 +435,18 @@ A \emph{light client} is an ITM that after communicating with a set of parties $
 
 A parallel must be drawn to the verifier in~\cite{nipopows}. The verifier is non-interactive whereas we also allow interactive protocols for a light client. In NIPoPoWs a proof for the tip of the chain is called a suffix proof and a proof for the inclusion of some block in a chain is called an infix proof. A final difference is that in NIPoPoWs the proof size is fixed as $O(polylog(n))$ whereas our definition is more general, allowing any sublinear proof size.
 
+\subsection{An ideal construction}
+Suppose a hypothetical cryptocurrency where we can specify the format of the block header.
+
+\begin{enumerate}
+    \item For UTXO we include a commitment to a map of the form $address \rightarrow [tx_1, \dots, tx_k]$.
+    \item For accounts we include a commitment to a map of the form $address \rightarrow \tpl{balance, nonce, [tx_1, \dots, tx_k]}$.
+\end{enumerate}
+
+A light wallet can work as follows. It first fires up a light client according to some light client protocol and requests the blockchain tip. It then extracts the commitment from the block header. It subsequently queries a helpful node for the value of the map for an address of interest along with a proof that the value actually belongs to the committed map. Finally it verifies the proof and if successful can use this information to operate.
+
+This construction succeeds in syncing by only downloading $o(n)$ block headers and $\Theta(y)$ transactions and Merkle inclusion proofs.
+
 \begin{acks}
 \end{acks}
 
