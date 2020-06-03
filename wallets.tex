@@ -444,9 +444,24 @@ Suppose a hypothetical cryptocurrency where we can specify the format of the blo
     \item For accounts we include a commitment to a map of the form $address \rightarrow \tpl{balance, nonce, [tx_1, \dots, tx_k]}$.
 \end{enumerate}
 
+For the commitment any key-value commitment structure can be used such as Sparse Merkle Trees~\cite{sparse-mt,revocation-transparency} or Merkle Patricia Tries which are already used for header commitments in Ethereum~\cite{wood2014ethereum}. We require that the commitments are verified as part of the consensus protocol and that a block is rejected by honest full nodes if its block header commitment is bogus.
+
 A light wallet can work as follows. It first fires up a light client according to some light client protocol and requests the blockchain tip. It then extracts the commitment from the block header. It subsequently queries a helpful node for the value of the map for an address of interest along with a proof that the value actually belongs to the committed map. Finally it verifies the proof and if successful can use this information to operate.
 
-This construction succeeds in syncing by only downloading $o(n)$ block headers and $\Theta(y)$ transactions and Merkle inclusion proofs.
+\paragraph{Performance.} This construction succeeds in syncing by only downloading $o(n)$ block headers and $\Theta(y)$ transactions and proofs.
+\begin{theorem}
+The ideal light wallet construction is secure with regards to a secure light client protocol.
+\end{theorem}
+\begin{proof}[Proof Sketch]
+If the tip is chosen to $k$-buried then it belongs to the honest chain except with negligible probability in the security parameter. Thus the commitments obtained are valid, as honest nodes reject blocks with invalid header commitments. Finally the data obtained from the helpful node for the key of interest need to be consistent with the commitment due to the security of the authenticated map protocol.
+\end{proof}
+
+\begin{theorem}
+An adversarial server cannot hide transactions from the light wallet.
+\end{theorem}
+\begin{proof}
+Assume an adversarial server that succeeds in hiding transactions from the light wallet. This means they produced for some $y$, map $M$ and key $k$ where $y \neq M[k]$ a proof $\pi$ such that $\textsf{Ver}_\textsf{auth-map}(\textsf{Commit}_\textsf{auth-map}(M), \pi, k, y) = \textsf{true}$, which directly conflicts with the security of the authenticatd map protocol.
+\end{proof}
 
 \begin{acks}
 \end{acks}
