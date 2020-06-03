@@ -463,6 +463,9 @@ An adversarial server cannot hide transactions from the light wallet.
 Assume an adversarial server that succeeds in hiding transactions from the light wallet. This means they produced for some $y$, map $M$ and key $k$ where $y \neq M[k]$ a proof $\pi$ such that $\textsf{Ver}_\textsf{auth-map}(\textsf{Commit}_\textsf{auth-map}(M), \pi, k, y) = \textsf{true}$, which directly conflicts with the security of the authenticatd map protocol.
 \end{proof}
 
+\paragraph{Deployment paths.}
+Although such helpful commitments have been proposed to aid in building light and secure wallets since as early as 2012~\cite{ultimate}, such commitments do not exist in either Bitcoin or Ethereum today. We remark that such commitments could be incorporated as a non-contentious soft-fork.
+
 \begin{acks}
 \end{acks}
 
