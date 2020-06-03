@@ -323,7 +323,7 @@ The server is a full-node that maintains the whole chain and its tip. Only when 
 \begin{table*}
 \caption{A comparison of the cryptocurrency wallets in practice. Server computation only refers to the computation the server is required to do to serve a new wallet and does not include previous or continuous computation like maintaining an address index. Partial vulnerability to an attack is denoted with \half{} and full vulnerability is denoted with \full.\label{comparison}}
 \centering
-\begin{tabular}{|r|ccc|cccc|}
+\begin{tabular}{|r|ccc|ccccc|}
 \multicolumn{1}{c}{} &
 \rot{Bandwidth} &
 \rot{Client computation} &
@@ -331,16 +331,17 @@ The server is a full-node that maintains the whole chain and its tip. Only when 
 \rot{Open participation} &
 \rot{Address leakage} &
 \rot{Double-spendable} &
-\rot{Invalid tx acceptance}
+\rot{Invalid tx acceptance} &
+\rot{Uncensorability}
 \\ \hline
-\emph{Proposal}&\multicolumn{3}{c|}{\emph{Performance}}&\multicolumn{4}{c|}{\emph{Security}} \\
+\emph{Proposal}&\multicolumn{3}{c|}{\emph{Performance}}&\multicolumn{5}{c|}{\emph{Security}} \\
 \hline
-%name    &bandwidt&client  &server  &open &leak &doubl&inval
-Full Node&$O(n+m)$&$O(n+m)$&$O(1)$  &\full&     &     &     \\
-SPV      &$O(n+y)$&$O(n+y)$&$O(n+m)$&\full&\half&     &     \\
-Electrum &$O(n+y)$&$O(n+y)$&$O(y)$  &     &\full&     &     \\
-Neutrino &$O(n+y)$&$O(n+y)$&$O(1)$  &\full&\half&     &     \\
-Yoroi    &$O(y)$  &$O(y)$  &$O(y)$  &     &\full&\full&\full\\
+%name    &bandwidt&client  &server  &open &leak &doubl&inval&uncen
+Full Node&$O(n+m)$&$O(n+m)$&$O(1)$  &\full&     &     &     &\full\\
+SPV      &$O(n+y)$&$O(n+y)$&$O(n+m)$&\full&\half&     &     &     \\
+Electrum &$O(n+y)$&$O(n+y)$&$O(y)$  &     &\full&     &     &     \\
+Neutrino &$O(n+y)$&$O(n+y)$&$O(1)$  &\full&\half&     &     &\full\\
+Yoroi    &$O(y)$  &$O(y)$  &$O(y)$  &     &\full&\full&\full&     \\
 \hline
 \end{tabular}
 \end{table*}
@@ -366,6 +367,7 @@ Our security comparison focuses on the following aspects.
     \item \textbf{Address leakage}: Whether the wallet reveals information about the user's addresses to any server in order to synchronise.
     \item \textbf{Double-spendable}: Whether any server can successfully mount a double-spend attack on the user through the wallet.
     \item \textbf{Invalid transaction acceptance}: Whether the wallet may accept transactions that are not part of the best chain.
+    \item \textbf{Uncensorability}: Whether the server can censor transactions.
 \end{itemize}
 
 A comparison of the wallets in tabular form is presented in \cref{comparison}.
