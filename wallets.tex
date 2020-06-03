@@ -452,14 +452,14 @@ For the commitment any key-value commitment structure can be used such as Sparse
 A light wallet can work as follows. It first fires up a light client according to some light client protocol and requests the blockchain tip. It then extracts the commitment from the block header. It subsequently queries a helpful node for the value of the map for an address of interest along with a proof that the value actually belongs to the committed map. Finally it verifies the proof and if successful can use this information to operate.
 
 \paragraph{Performance.} This construction succeeds in syncing by only downloading $o(n)$ block headers and $\Theta(y)$ transactions and proofs.
-\begin{theorem}
+\begin{theorem}[Security]
 The ideal light wallet construction is secure with regards to a secure light client protocol.
 \end{theorem}
 \begin{proof}[Proof Sketch]
 If the tip is chosen to $k$-buried then it belongs to the honest chain except with negligible probability in the security parameter. Thus the commitments obtained are valid, as honest nodes reject blocks with invalid header commitments. Finally the data obtained from the helpful node for the key of interest need to be consistent with the commitment due to the security of the authenticated map protocol.
 \end{proof}
 
-\begin{theorem}
+\begin{theorem}[Uncensorability]
 An adversarial server cannot hide transactions from the light wallet.
 \end{theorem}
 \begin{proof}
