@@ -295,6 +295,7 @@ This compression of the transactions is lossy and means that the transactions in
 
 We remark that this is not an asymptotic improvement over the theoretical SPV solution. We posit that an asymptotic improvement over the theoretical SPV solution which preserves privacy (i.e. no private keys are revealed to the remote peer) cannot exist.
 \subsection{MyMonero}
+\label{mymonero}
 A final solution for private cryptocurrencies observed in practice comes from Monero. MyMonero is a desktop and mobile wallet that operates with the help of a trusted server. The viewing private key is disclosed to the server so that it can detect transactions on the wallet's behalf. Any detected transactions are relayed to the wallet in order for the wallet to display and for the wallet to hold an up-to-date UTXO for the purposes of creating new transactions.
 
 MyMonero works differently when the user creates a new seed and when the user recovers their wallet with an existing seed. When creating a new seed, the viewing private key is disclosed but because the server knows the key was just generated they can be certain that it has never received any transactions.
@@ -465,6 +466,22 @@ Assume an adversarial server that succeeds in hiding transactions from the light
 
 \paragraph{Deployment paths.}
 Although such helpful commitments have been proposed to aid in building light and secure wallets since as early as 2012~\cite{ultimate}, such commitments do not exist in either Bitcoin or Ethereum today. We remark that such commitments could be incorporated as a non-contentious soft-fork.
+
+\subsection{Private cryptocurrencies}
+We now turn our attention to building light clients for private cryptocurrencies. ZCash recently announced the upcoming Heartwood hard-fork that will include FlyClient support~\cite{zcash-heartwood-news} by means of adding a Merkle Mountain Range commitment to its block headers~\cite{zcash-flyclient-zip}. The addition is warranted as, according to the company in~\cite{zcash-heartwood-news} ``Flyclient enables interoperability efforts, cross-chain integration and light-client use cases''.
+
+It is interesting to note however that even though light clients are a welcome improvement, no straightforward light wallet solution has been proposed for a light client of a private cryptocurrency. For a potential solution, there exist two possible paths.
+
+\begin{enumerate}
+    \item \textbf{Revealing the private viewing key.} The light wallet may work by sharing its private viewing key with a server. The server then needs to detect relevant transactions for the user. Unfortunately detecting transactions requires time linear to the number of transactions in the network. Each transaction is returned to the wallet, accompanied with a proof of inclusion in the wallet's adopted chain. The proof of inclusion of a transaction is comprised of:
+    \begin{enumerate}
+        \item the header of the block the transaction is included in
+        \item a Merkle inclusion proof against the Merkle root in that header
+        \item a Merkle Mountain Range inclusion proof for that block header against the MMR root in the tip header.
+    \end{enumerate}
+    This solution requires $O(m)$ computation for the server, and offers marginally better security guarantees than the solution of MyMonero from~\cref{mymonero}. Specifically, whereas in MyMonero the wallet is unaware of the honestly adopted chain and does not perform any verification of transations, here the it is guaranteed that the transactions the wallet receives are indeed included in the honestly adopted chain. This removes the advantage of a server to perform a double-spend attack against a vendor using the wallet.
+    \item \textbf{Not revealing the private viewing key.} The light wallet does not share any information with the server. We posit that in this case the wallet must receive all transactions, for if the server could know what transactions may be more relevant, the indistingushability property of ZCash would not hold.
+\end{enumerate}
 
 \begin{acks}
 \end{acks}
