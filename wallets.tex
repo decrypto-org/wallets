@@ -80,7 +80,7 @@ Usability is one of the most important obstacles in the adoption of cryptocurren
 
 \section{Preliminaries}
 \subsection{The UTXO Model}
-In the UTXO model a transaction consists of inputs and outputs. An output consists of an amount and a locking script (called \texttt{scriptPubKey} in Bitcoin). In Bitcoin the locking script is described in a stack-based language called Bitcoin Script. An input consists of an unlocking script (called \texttt{scriptSig} in Bitcoin) and an output pointer (also called an outpoint) which is a tuple of the form (\texttt{txID}, \texttt{outputIndex}). We say that an input \emph{spends} an output, where \texttt{txID} refers to the transaction id that includes the output and \texttt{outputIndex} refers to the zero-based index of the output to be spent in that transaction.
+In the UTXO model a transaction consists of inputs and outputs. An output consists of an amount and a locking script (called \texttt{scriptPubKey} in Bitcoin). In Bitcoin the locking script is described in a stack-based language called Bitcoin Script. An input consists of an unlocking script (called \texttt{scriptSig} in Bitcoin) and an output pointer (also called an outpoint) which is a tuple of the form \tpl{\texttt{txID}, \texttt{outputIndex}}. We say that an input \emph{spends} an output, where \texttt{txID} refers to the transaction id that includes the output and \texttt{outputIndex} refers to the zero-based index of the output to be spent in that transaction.
 
 \def\btcstate{\ensuremath{\sigma_\text{btc}}}
 \def\btcapply{\text{apply}\textsubscript{btc}}
