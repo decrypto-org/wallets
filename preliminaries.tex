@@ -76,6 +76,28 @@ A valid transaction according to a state can be applied to it to generate a new 
 
 Coinbase transactions could exist in account-based cryptocurrencies, for example having a $\sender$ field of all zeros. In practice Ethereum-based cryptocurrencies don't have them but instead directly include the miner's address inside the block header. For our purposes we will not consider the change of state due to miner rewards.
 
+\subsection{The Blockchain}
+\def\Gen{\textsf{Gen}}
+
+Transactions are usually arranged in batches and included in so-called \emph{blocks}. Blocks are arranged in a structure which resembles a linked list, in which each block contains a pointer to its previous block in the form of its hash. Only exception to this rule is the first block of the list, which is called the \emph{genesis} and does not include any such pointer. This linked list is called the \emph{chain}, which we usually denote with \chain. With $\chain[i]$ we denote the $i$-th block of the chain, and we customarily denote the genesis block as $\Gen \triangleq \chain[0]$.
+
+We adopt the Python notation to refer to parts of the chain, which is illustrated in~\cref{notation}.
+
+\begin{table*}
+    \caption{The notation used throughout this work.\label{notation}}
+    \centering
+    \begin{tabular}{r|l}
+    \chain & the chain \\
+    $\chain[i]$ & the $i$-th block of the chain ($i \ge 0$)\\
+    \Gen & the genesis block ($\chain[0]$) \\
+    $\chain[-i]$ & the $i$-th block from the end of the chain ($i > 0$) \\
+    $\chain[i:j]$ & all chain blocks starting from $\chain[i]$ up to but not including $\chain[j]$ \\
+    $\chain[:j]$ & all chain blocks from the genesis up to but not including $\chain[j]$ (equivalent to $\chain[0:j]$) \\
+    $\chain[i:]$ & all chain blocks from $\chain[i]$ up to and including the last (equivalent to $\chain[i:|\chain|]$) \\
+    $k$ & the stability parameter of the blockchain protocol \\
+    \end{tabular}
+\end{table*}
+
 \subsection{SPV Security}
 \begin{definition}[SPV client]
 An \emph{SPV client} is an ITM that knows a genesis block \textsf{Gen} and connects to a set of full nodes $\mathcal{P}$, at least one of which is honest. It may only request block headers at a range of heights. It obtains all header-chains $\chain_1, \dots, \chain_{|\mathcal{P}|}$, keeping only those for which the chain structure holds ($\forall 1 < i \le |\chain|: H(\chain[i-1]) = \chain[i].previd$). It subsequently compares them and adopts the chain with the most difficulty.
