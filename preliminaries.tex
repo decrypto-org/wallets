@@ -81,7 +81,7 @@ Coinbase transactions could exist in account-based cryptocurrencies, for example
 
 Transactions are usually arranged in batches and included in so-called \emph{blocks}. Blocks are arranged in a structure which resembles a linked list, in which each block contains a pointer to its previous block in the form of its hash. Only exception to this rule is the first block of the list, which is called the \emph{genesis} and does not include any such pointer. This linked list is called the \emph{chain}, which we usually denote with \chain. With $\chain[i]$ we denote the $i$-th block of the chain, and we customarily denote the genesis block as $\Gen \triangleq \chain[0]$.
 
-We adopt the Python notation to refer to parts of the chain, which is illustrated in~\cref{notation}.
+We adopt the Python notation to refer to parts of the chain, which is illustrated in~\cref{notation}. We call $\chain[:-k]$ the \emph{stable} part of \chain.
 
 \begin{table*}
     \caption{The notation used throughout this work.\label{notation}}
@@ -97,6 +97,23 @@ We adopt the Python notation to refer to parts of the chain, which is illustrate
     $k$ & the stability parameter of the blockchain protocol \\
     \end{tabular}
 \end{table*}
+
+Whether in the UTXO or account model, we say that each block has a state. The state of a block $\chain[i]$ is defined as the state of the previous block $\chain[i-1]$, upon application of all transactions present in $\chain[i]$. More formally, we define the state of a block as follows:
+
+\[
+\text{state}(\chain[i]) = \left\{
+    \begin{array}{cl}
+        \text{apply}(\text{state}(\chain[i-1]), \chain[i].\texttt{txs}) & \text{if } i \ge 0 \\
+        \epsilon & \text{otherwise}
+    \end{array}
+\right.
+\]
+
+Application of a sequence of transactions occurs by applying each transaction and using the new state for the next application. More formally:
+
+\[
+\text{apply}(st, [tx_1, tx_2, \dots, tx_z]) = \text{apply}(\text{apply}(st, tx_1), [tx_2, \dots, tx_z])
+\]
 
 \subsection{SPV Security}
 \begin{definition}[SPV client]
