@@ -1,0 +1,34 @@
+\begin{algorithm}[H]
+    \caption{\label{alg.electrum} The Electrum client syncing protocol for a blockchain rooted in \Gen, with access to a fixed set of servers $\mathcal{S}$ and a public key $pk$ for which all transactions must be obtained.}
+    \begin{algorithmic}[1]
+        \Function{$\text{Sync}_{\Gen, \mathcal{S}}$}{$pk$}
+            \State{$\chain \gets \Gen$}
+            \def\server{\textsf{server}}
+            \def\primary{\textsf{primary}}
+            \def\GetChain{\texttt{GetChain}}
+            \def\GetTXs{\texttt{GetTXs}}
+            \def\maxvalid{\textsf{maxvalid}}
+            \def\primary{\textsf{primary}}
+            \def\ourTXs{\textsf{ourTXs}}
+
+            \State{$s \rsample [|\mathcal{S}|]$}
+            \State{$\primary \gets \mathcal{S}[s]$}
+            \For{$\server \in \mathcal{S}$}
+                \State{$\hat{\chain} \gets \server.\GetChain(\Gen)$}
+                \State{$\chain \gets \maxvalid(\chain, \hat{\chain})$}
+            \EndFor
+
+            \def\VerMT{\ensuremath{\textsf{Ver}_\textsf{auth-set}}}
+            \State{$txs \gets \primary.\GetTXs(pk)$}
+            \State{$\ourTXs \gets \{\}$}
+            \For{$\tpl{tx, h, \pi} \in txs$}
+                \If{$\VerMT(\chain[h].\texttt{merkleRoot}, tx, \pi) = \textsf{false}$}
+                    \State{\textbf{continue}}
+                \EndIf
+                \State{$\ourTXs \cupeq \{tx\}$}
+            \EndFor
+            \State\Return{$\ourTXs$}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+

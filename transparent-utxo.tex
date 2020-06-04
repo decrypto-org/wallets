@@ -51,9 +51,12 @@ In Electrum, servers hold an address index over all historical transactions. In 
 
 The wallet obtains all the header-chains advertised by its peers and verifies their Proof-of-Work. It then only keeps the heaviest valid chain for further processing. Subsequently it makes use of the \texttt{block\-chain.\allowbreak script\-hash.\allowbreak get\_history}
 \footnote{The full API offered by an Electrum server is shown in \url{https://electrumx.readthedocs.io/en/latest/protocol-methods.html}}
-API call to obtain all transactions concerning every possible address of the user, incrementing the KDF nonce until no more transactions are found. For each of these transactions it requires a Merkle proof of inclusion that is valid against some block in the heaviest chain.
+API call to obtain all transactions concerning every possible address of the user, incrementing the KDF nonce until no more transactions are found. For each of these transactions it requires a Merkle proof of inclusion that is valid against some block in the heaviest chain. The full process of syncing is illustrated in~\cref{alg.electrum}.
 
 We remark that the Electrum protocol is more efficient than the previous SPV wallet solution. Unfortunately, this comes at the cost of directly revealing the user's addresses to the remote peer. An Electrum server customarily maintains an address index for all historical transactions, making servicing the \texttt{get\_history} very efficient, in contrast with the heavy work a full node has to do to service an SPV wallet.
+
+\input{algorithms/electrum}
+
 \subsection{Neutrino}
 Neutrino is a new proposal for more efficient light syncing on Bitcoin which aims to be an improvement over SPV. Initially proposed for Lightning, it provides a nice solution for light wallets. It is described in BIP-157, BIP-158.
 
