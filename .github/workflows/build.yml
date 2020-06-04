@@ -11,3 +11,6 @@ jobs:
         with:
           root_file: wallets.tex
           latexmk_use_lualatex: true
+      - uses: actions/upload-artifact@v2
+        with:
+          path: wallets.pdf
