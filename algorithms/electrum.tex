@@ -5,14 +5,13 @@
             \State{$\chain \gets \Gen$}
             \def\server{\textsf{server}}
             \def\primary{\textsf{primary}}
-            \def\GetChain{\texttt{GetChain}}
+            \def\GetChain{\texttt{GetHeaderChain}}
             \def\GetTXs{\texttt{GetTXs}}
             \def\maxvalid{\textsf{maxvalid}}
             \def\primary{\textsf{primary}}
             \def\ourTXs{\textsf{ourTXs}}
 
-            \State{$s \rsample [|\mathcal{S}|]$}
-            \State{$\primary \gets \mathcal{S}[s]$}
+            \State{$\primary \rsample \mathcal{S}$}
             \For{$\server \in \mathcal{S}$}
                 \State{$\hat{\chain} \gets \server.\GetChain(\Gen)$}
                 \State{$\chain \gets \maxvalid(\chain, \hat{\chain})$}
@@ -22,7 +21,7 @@
             \State{$txs \gets \primary.\GetTXs(pk)$}
             \State{$\ourTXs \gets \{\}$}
             \For{$\tpl{tx, h, \pi} \in txs$}
-                \If{$\VerMT(\chain[h].\texttt{merkleRoot}, tx, \pi) = \textsf{false}$}
+                \If{$\lnot \VerMT(\chain[h].\texttt{merkleRoot}, tx, \pi)$}
                     \State{\textbf{continue}}
                 \EndIf
                 \State{$\ourTXs \cupeq \{tx\}$}
