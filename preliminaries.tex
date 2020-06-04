@@ -78,7 +78,7 @@ Coinbase transactions could exist in account-based cryptocurrencies, for example
 
 \subsection{SPV Security}
 \begin{definition}[SPV client]
-An \emph{SPV client} is an ITM that knows a genesis block \textsf{Gen} connects to a set of full nodes $\mathcal{P}$, at least one of which is honest. It may only request block headers at a range of heights. It obtains all header-chains $\chain_1, \dots, \chain_{|\mathcal{P}|}$, keeping only those for which the chain structure holds ($\forall 1 < i \le |\chain|: H(\chain[i-1]) = \chain[i].previd$). It subsequently compares them and adopts the chain with the most difficulty.
+An \emph{SPV client} is an ITM that knows a genesis block \textsf{Gen} and connects to a set of full nodes $\mathcal{P}$, at least one of which is honest. It may only request block headers at a range of heights. It obtains all header-chains $\chain_1, \dots, \chain_{|\mathcal{P}|}$, keeping only those for which the chain structure holds ($\forall 1 < i \le |\chain|: H(\chain[i-1]) = \chain[i].previd$). It subsequently compares them and adopts the chain with the most difficulty.
 \end{definition}
 
 We state some theorems pertaining to the adopted chain of an SPV client which are derivable from the works of~\cite{backbone,garay2017bitcoin,pass2017analysis}.
