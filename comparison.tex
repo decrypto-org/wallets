@@ -1,0 +1,77 @@
+\section{Comparison}
+\newcolumntype{R}[2]{%
+    >{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}%
+    l%
+    <{\egroup}%
+}
+\newcommand*\rot{\multicolumn{1}{R{45}{1em}}}% no optional argument here, please!
+
+\def\half{{\freeserif \char9680}}
+\def\full{{\freeserif \char9679}}
+
+\begin{table*}
+\caption{A comparison of the cryptocurrency wallets in practice. Server computation only refers to the computation the server is required to do to serve a new wallet and does not include previous or continuous computation like maintaining an address index. Partial vulnerability to an attack is denoted with \half{} and full vulnerability is denoted with \full.\label{comparison}}
+\centering
+\begin{tabular}{|r|ccc|ccccc|}
+\multicolumn{1}{c}{} &
+\rot{Bandwidth} &
+\rot{Client computation} &
+\rot{Server computation*} &
+\rot{Open participation} &
+\rot{Privacy} &
+\rot{No double-spend advantage} &
+\rot{Only valid transactions} &
+\rot{Uncensorability}
+\\ \hline
+\emph{Proposal}&\multicolumn{3}{c|}{\emph{Performance}}&\multicolumn{5}{c|}{\emph{Security}} \\
+\hline
+%name    &bandwidt&client  &server  &open &priva&dblad&onval&uncen
+Full Node&$O(n+m)$&$O(n+m)$&$O(1)$  &\full&\full&\full&\full&\full\\
+SPV      &$O(n+y)$&$O(n+y)$&$O(n+m)$&\full&\half&\full&\full&     \\
+Electrum &$O(n+y)$&$O(n+y)$&$O(y)$  &     &     &\full&\full&     \\
+Neutrino &$O(n+y)$&$O(n+y)$&$O(1)$  &\full&\half&\full&\full&\full\\
+Yoroi    &$O(y)$  &$O(y)$  &$O(y)$  &     &     &     &     &     \\
+\hline
+\end{tabular}
+\end{table*}
+
+We use the following variables for our asymptotic analysis:
+\begin{itemize}
+    \item $n$: number of all blocks
+    \item $m$: number of all transaction
+    \item $y$: number of relevant transactions (implicating the wallet user)
+\end{itemize}
+
+Our performance comparison is asymptotic in terms of the aforementioned variables and is broken down on the following aspects.
+
+\begin{itemize}
+    \item \textbf{Bandwidth}: The bandwidth necessary to fully synchronise a wallet from scratch.
+    \item \textbf{Server computation}: Any computation necessary for the server to perform in order to aid the synchronisation of a new wallet.
+    \item \textbf{Client computation}: Any computation it is necessary for the wallet to perform in order to finish synchronisation and enter a usable state (for funding transaction descriptions, balance and transaction history).
+\end{itemize}
+
+Our security comparison focuses on the following aspects.
+\begin{itemize}
+    \item \textbf{Open participation}: Whether participating as a wallet's server is possible for everyone.
+    \item \textbf{Privacy}: Whether the wallet reveals information about the user's addresses to any server in order to synchronise.
+    \item \textbf{No double-spend advantage}: Whether any server has an advantage over any other network participant to perform a double-spend attack on the user through the wallet.
+    \item \textbf{Only valid transactions}: Whether the wallet may accept transactions that are not part of the best chain.
+    \item \textbf{Uncensorability}: Whether the server can censor transactions.
+\end{itemize}
+
+A comparison of the wallets in tabular form is presented in \cref{comparison}.
+
+\subsection{Full Node}
+The full node requires the most amount of bandwidth, $O(n+m)$ as all full blocks must be downloaded. The amount of client computation is identical as every block and transaction needs to be verified. However, for servicing the full node other nodes need not perform any special computation and can simply act as relays. The network of a permisionless cryptocurrency's full node is open to participation by definition. No information pertaining to the wallet addresses can be produced by the network based on what subset of transactions the full node downloads, as it downloads all of them. Additionally the full node never explicitly advertises its addresses. Similarly as it verifies all blocks it is not vulnerable to double-spend or invalid transaction acceptance attacks.
+
+\subsection{BIP-37 SPV}
+For SPV the bandwidth is $O(n+y)$. $O(n)$ due to all block headers and $O(y)$ due to all (hopefully) relevant transactions downloaded. For each block header verification takes place and for each relevant transaction verification of its attached Merkle proof takes place, thus client computation is also $O(n+y)$. BIP-37 SPV's weak point is in server computation however, as the server looks though every single transaction in history to evaluate if it matches the bloom filter or not, thus it has the worst server computation complexity of all proposals, $O(n+m)$. Again, any full node can participate in the BIP-37 SPV network as a server. Addresses are not directly provided to the server, and some of the transactions detected as relevant by the server may not actually implicate the user, due to the bloom filter's false positive rate. The false positive rate is configurable and privacy-minded users may set a high false positive rate so as to create noise, but this comes at the cost of bandwidth. We conclude that this proposal does leak information about the user's addresses to the server. Double-spending and invalid transaction acceptance attacks are infeasible due to SPV security, which states that as long as the adversarial mining power is upper bounded by $50\%$ of the total mining power the block contents of the stable part of the best chain are valid.
+
+\subsection{Electrum}
+In Electrum the client receives all chain headers similar to BIP-37 SPV, and then processes all relevant transactions relayed by the primary server resulting in $O(n+y)$ bandwidth and $O(n+y)$ computation. The server however, simply relays all block headers, and because it maintains an index of addresses to transactions where it can just look up the client's advertised addresses its computation is $O(y)$. Server addresses are hardcoded in the Electrum software so participation is limited. Addresses are directly leaked to the servers for efficiency. Double spend and invalid transaction acceptance attacks are again impossible due to SPV security.
+
+\subsection{Neutrino}
+Neutrino downloads all chain headers and for each transaction of interest the full block it belongs to, yielding $O(n+y)$ bandwidth. The client needs to verify the header chain, compare its filter to each block filter to detect relevant transactions and verify the full blocks received match the corresponding blocks in the header chain, yielding a client computation of $O(n+y)$. The strong point of Neutrino is server computation. The server simply acts as a relay of information so the computation is constant. Neutrino is planned to be integrated in the full node P2P protocol which makes participation open. Addresses are not leaked directly, however full blocks are only received when they contain transactions of interest which could yield some information about the identity of the client to an adversary. Due to SPV security other attacks are impossible.
+
+\subsection{Yoroi}
+Yoroi only downloads purported relevant transactions from the explorer, which is $O(y)$. It simply stores the transactions and maintains a UTXO set, which yields $O(y)$ computation on the client. The server simply looks up the transactions of the provided addresses on an index and returns all of them, resulting in $O(y)$ computation. As the server address is hardcoded in the software, this is not a P2P protocol and participation is not open. Addresses are leaked directly to the server. The client does not perform any check that the transactions are actually valid or that they belong in the best chain, thus a double spend attack is feasible.

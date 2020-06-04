@@ -1,0 +1,61 @@
+\section{Light Wallets}
+\begin{definition}[Light wallet]
+A wallet is called \emph{light} if it can be usable in all 3 aspects (transaction description funding, balance and transaction history) by having a communication complexity of $o(n+m)$.
+%TODO: not right. I need to talk about how many blocks, how much data and how much auxillary information must be transmitted, which doesn't seem like it can be captured very well with asymptotics.
+\end{definition}
+
+\begin{definition}[Light client]
+A \emph{light client} is an ITM that after communicating with a set of parties $P$ of which at least one is honest, can determine by using $o(n)$ of communication:
+\begin{enumerate}
+    \item The tip of the honest chain.
+    \item The inclusion of some block in the honest chain.
+\end{enumerate}
+\end{definition}
+
+A parallel must be drawn to the verifier in~\cite{nipopows}. The verifier is non-interactive whereas we also allow interactive protocols for a light client. In NIPoPoWs a proof for the tip of the chain is called a suffix proof and a proof for the inclusion of some block in a chain is called an infix proof. A final difference is that in NIPoPoWs the proof size is fixed as $O(polylog(n))$ whereas our definition is more general, allowing any sublinear proof size.
+
+\subsection{An ideal construction}
+Suppose a hypothetical cryptocurrency where we can specify the format of the block header.
+
+\begin{enumerate}
+    \item For UTXO we include a commitment to a map of the form $address \rightarrow [tx_1, \dots, tx_k]$.
+    \item For accounts we include a commitment to a map of the form $address \rightarrow \tpl{balance, nonce, [tx_1, \dots, tx_k]}$.
+\end{enumerate}
+
+For the commitment any key-value commitment structure can be used such as Sparse Merkle Trees~\cite{sparse-mt,revocation-transparency} or Merkle Patricia Tries which are already used for header commitments in Ethereum~\cite{wood2014ethereum}. We require that the commitments are verified as part of the consensus protocol and that a block is rejected by honest full nodes if its block header commitment is bogus.
+
+A light wallet can work as follows. It first fires up a light client according to some light client protocol and requests the blockchain tip. It then extracts the commitment from the block header. It subsequently queries a helpful node for the value of the map for an address of interest along with a proof that the value actually belongs to the committed map. Finally it verifies the proof and if successful can use this information to operate.
+
+\paragraph{Performance.} This construction succeeds in syncing by only downloading $o(n)$ block headers and $\Theta(y)$ transactions and proofs.
+\begin{theorem}[Security]
+The ideal light wallet construction is secure with regards to a secure light client protocol.
+\end{theorem}
+\begin{proof}[Proof Sketch]
+If the tip is chosen to $k$-buried then it belongs to the honest chain except with negligible probability in the security parameter. Thus the commitments obtained are valid, as honest nodes reject blocks with invalid header commitments. Finally the data obtained from the helpful node for the key of interest need to be consistent with the commitment due to the security of the authenticated map protocol.
+\end{proof}
+
+\begin{theorem}[Uncensorability]
+An adversarial server cannot hide transactions from the light wallet.
+\end{theorem}
+\begin{proof}
+Assume an adversarial server that succeeds in hiding transactions from the light wallet. This means they produced for some $y$, map $M$ and key $k$ where $y \neq M[k]$ a proof $\pi$ such that $\textsf{Ver}_\textsf{auth-map}(\textsf{Commit}_\textsf{auth-map}(M), \pi, k, y) = \textsf{true}$, which directly conflicts with the security of the authenticatd map protocol.
+\end{proof}
+
+\paragraph{Deployment paths.}
+Although such helpful commitments have been proposed to aid in building light and secure wallets since as early as 2012~\cite{ultimate}, such commitments do not exist in either Bitcoin or Ethereum today. We remark that such commitments could be incorporated as a non-contentious soft-fork.
+
+\subsection{Private cryptocurrencies}
+We now turn our attention to building light clients for private cryptocurrencies. ZCash recently announced the upcoming Heartwood hard-fork that will include FlyClient support~\cite{zcash-heartwood-news} by means of adding a Merkle Mountain Range commitment to its block headers~\cite{zcash-flyclient-zip}. The addition is warranted as, according to the company in~\cite{zcash-heartwood-news} ``Flyclient enables interoperability efforts, cross-chain integration and light-client use cases''.
+
+It is interesting to note however that even though light clients are a welcome improvement, no straightforward light wallet solution has been proposed for a light client of a private cryptocurrency. For a potential solution, there exist two possible paths.
+
+\begin{enumerate}
+    \item \textbf{Revealing the private viewing key.} The light wallet may work by sharing its private viewing key with a server. The server then needs to detect relevant transactions for the user. Unfortunately detecting transactions requires time linear to the number of transactions in the network. Each transaction is returned to the wallet, accompanied with a proof of inclusion in the wallet's adopted chain. The proof of inclusion of a transaction is comprised of:
+    \begin{enumerate}
+        \item the header of the block the transaction is included in
+        \item a Merkle inclusion proof against the Merkle root in that header
+        \item a Merkle Mountain Range inclusion proof for that block header against the MMR root in the tip header.
+    \end{enumerate}
+    This solution requires $O(m)$ computation for the server, and offers marginally better security guarantees than the solution of MyMonero from~\cref{mymonero}. Specifically, whereas in MyMonero the wallet is unaware of the honestly adopted chain and does not perform any verification of transations, here the it is guaranteed that the transactions the wallet receives are indeed included in the honestly adopted chain. This removes the advantage of a server to perform a double-spend attack against a vendor using the wallet.
+    \item \textbf{Not revealing the private viewing key.} The light wallet does not share any information with the server. We posit that in this case the wallet must receive all transactions, for if the server could know what transactions may be more relevant, the indistingushability property of ZCash would not hold.
+\end{enumerate}
