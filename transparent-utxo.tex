@@ -65,6 +65,15 @@ which encodes the set of all output scripts and the scripts of the outputs the i
 
 With this filter in place the light wallet works as follows. Initially, it downloads all block headers as usual and verifies them. Then it proceeds to download the filter corresponding to each block. It then checks locally for every block if it contains transactions of interest by making use of the filter. If a block contains transactions of interest, all its transactions are requested without witness data (e.g. signatures and data belonging to unlocking scripts). Then from the transactions obtained the wallet can only keep the actual transactions of interest and discard the rest. The process is illustrated in~\cref{alg.neutrino}.
 
+\paragraph{Deployment paths.}
+We look at two ways of implementing Neutrino filters in an existing cryptocurrency like Bitcoin.
+
+\paragraph{Forks.}
+First, with a soft-fork or hard-fork a commitment to the filter can be included in each block. With a soft-fork the commitment is included in the coinbase transaction, similar to how the wtxid root is included for SegWit~\cite{segwit}. With a hard-fork the commitment is included directly in the block header as a new field. The soft-fork is also indirectly commited in the header due to the transaction Merkle Tree root in the header. The commitment can be verified by additionally verifying a Merkle proof of inclusion for the coinbase transaction against the tree root in the header and checking that the coinbase transaction itself contains the filter commitment. The hard-fork implementation of a Neutrino client is illustrated in~\cref{alg.neutrino}.
+
+\paragraph{Majority vote.}
+Another way to utilize Neutrino filters without adjusting the block structure and thus eliminating the need for either a soft- or hard-fork is to ask all servers for the filter of each block and pick the one with the most votes as valid, if a majority of the server has voted on it. This requires us to harden our security assumptions about the set of servers the wallet is connected to. Whereas previously we required that at least one server is honest, now we require that the majority of servers is honest.
+
 \input{algorithms/neutrino}
 
 The improvements over SPV are twofold:

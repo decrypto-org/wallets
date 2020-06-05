@@ -1,5 +1,5 @@
 \begin{algorithm}[H]
-    \caption{\label{alg.neutrino} The Neutrino client syncing protocol for a blockchain rooted in \Gen, with access to a fixed set of servers $\mathcal{S}$ and a public key $pk$ for which all transactions must be obtained.}
+    \caption{\label{alg.neutrino} The Neutrino client syncing protocol for a blockchain rooted in \Gen, with access to a fixed set of servers $\mathcal{S}$ and a public key $pk$ for which all transactions must be obtained. The deployment method is through a hard-fork.}
     \begin{algorithmic}[1]
         \Function{$\text{Sync}_{\Gen, \mathcal{S}}$}{$pk$}
             \State{$\chain \gets \Gen$}
