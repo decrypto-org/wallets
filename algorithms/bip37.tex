@@ -1,0 +1,38 @@
+\begin{algorithm}[H]
+    \caption{\label{alg.bip37} The BIP-37 client syncing protocol for a blockchain rooted in \Gen, with access to a fixed set of servers $\mathcal{S}$ and a public key $pk$ for which all transactions must be obtained.}
+    \begin{algorithmic}[1]
+        \Function{$\text{Sync}_{\Gen, \mathcal{S}}$}{$pk$}
+            \State{$\chain \gets \Gen$}
+            \def\server{\textsf{server}}
+            \def\primary{\textsf{primary}}
+            \def\GetChain{\texttt{GetHeaderChain}}
+            \def\GetTXs{\texttt{GetTXs}}
+            \def\maxvalid{\textsf{maxvalid}}
+            \def\primary{\textsf{primary}}
+            \def\ourTXs{\textsf{ourTXs}}
+
+            \For{$\server \in \mathcal{S}$}
+                \State{$\hat{\chain} \gets \server.\GetChain(\Gen)$}
+                \State{$\chain \gets \maxvalid(\chain, \hat{\chain})$}
+            \EndFor
+
+            \State{$\ourTXs \gets \{\}$}
+            \State{$\textsf{filter} \gets \textsf{bloom-filter}(\{pk\})$}
+            \For{$\server \in \mathcal{S}$}
+                \State{$\server.\texttt{filterload}(\textsf{filter})$}
+                \For{$blk \in \chain$}
+                    \State{$\tpl{txs, \pi} \gets \server.\texttt{getblock}(blk)$}
+                    \If{$\neg \textsf{Ver-Multi}_\textsf{auth-set}(blk.\texttt{merkleRoot}, txs, \pi)$}
+                        \State{$\textbf{break}$}
+                    \EndIf
+                    \For{$tx \in txs$}
+                        \If{$relevant(tx, pk)$}
+                            \State{$\ourTXs \cupeq \{tx\}$}
+                        \EndIf
+                    \EndFor
+                \EndFor
+            \EndFor
+            \State\Return{$\ourTXs$}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
