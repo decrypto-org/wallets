@@ -39,9 +39,9 @@ Using this functionality of an SPV node as a building block, we examine how an S
 %TODO: talk about incrementing the nonce
 %TODO: talk about server-side bloom filter alteration
 
-A well known implementation of BIP-37 SPV is included in the bitcoinj library~\cite{bitcoinj}, which is a full Bitcoin implementation in Java. The most well known SPV wallet in practice is based on that library and is Andreas Schildbach's Android Bitcoin wallet~\cite{schildbach}. Other applications that implement BIP-37 SPV wallets include BRD~\cite{brd} and OpenBazaar~\cite{openbazaar}.
+A well known implementation of BIP-37 SPV is included in the bitcoinj library~\cite{bitcoinj}, which is a full Bitcoin implementation in Java. Andreas Schildbach's famous Android Bitcoin wallet~\cite{schildbach} is based on that library, as well as decentralized exchange Bisq~\cite{bisq}. Other applications that implement BIP-37 SPV wallets include BRD~\cite{brd} and OpenBazaar~\cite{openbazaar}.
 
-Note that the protocol may seem wasteful, especially in case the header chain is already synced as it forces us to re-download the whole header chain. Additionally, it may seem wasteful that the peer needs to process every single transaction in history in order to service the peer. These inefficiencies are mitigated in the next protocol we are going to discuss.
+Note that the protocol may seem wasteful, especially in case the header chain is already synced as it forces us to re-download the whole header chain. Additionally, it may seem wasteful that the peer needs to process every single transaction in history in order to service the peer. It has been shown that not only is it wasteful but can be an exploitable Denial-of-Service vector~\cite{todd-bip37-attack}. This lead to the reference implementation of Bitcoin, Bitcoin Core, to disable BIP-37 server functionality by default on full nodes~\cite{bip37-disable}. These inefficiencies are mitigated in the next protocol we are going to discuss.
 
 %TODO: talk about how the server can withhold transactions
 
