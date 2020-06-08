@@ -32,3 +32,12 @@ Metamask connects to a trusted web3 server and communicates with it over JSON-RP
 \end{enumerate}
 
 An explorer is used in order to obtain the transaction history, namely Etherscan.
+
+\subsection{SPV without history}
+It is very easy to conceive how an SPV wallet for Electrum would work without history capabilities. Observe that for spendability only the nonce for the wallet's address is necessary. The nonce along with the balance are included in the state trie of Ethereum, which is committed in the form of the trie root inside every block header. Thus a wallet would work as follows:
+
+\begin{enumerate}
+    \item Perform a headers sync to obtain the blockchain tip.
+    \item Ask for the value of the address of the user in the state trie at the tip, along with a proof for the value.
+    \item Verify the that the value is indeed committed in the root found at the tip block header and extract the balance and nonce from it.
+\end{enumerate}
