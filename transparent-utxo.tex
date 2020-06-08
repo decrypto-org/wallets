@@ -48,7 +48,7 @@ Note that the protocol may seem wasteful, especially in case the header chain is
 \subsection{Electrum}
 %TODO: checkpoints
 Electrum is probably the most well-known wallet for Bitcoin.
-The protocol it utilizes is as follows. First, the wallet connects to 10 peers chosen from a hardcoded list in the software. One of them is selected as primary at random. The peers speak a protocol specified by Electrum and not the full node protocol.
+The protocol it utilizes is as follows. First, the wallet connects to 10 peers chosen from a hardcoded list in the software. One of them is selected as primary at random. The peers speak a protocol specified by Electrum and originally proposed in~\cite{stratum} and not the full node protocol.
 In Electrum, servers hold an address index over all historical transactions. In early versions~\cite{electrumserver} of the server the index was arranged in a Merkle Patricia Trie~\cite{ultimate}. The most widely used server implementation~\cite{electrumserverrust} does not arranging the index in this way and simply relies on an underlying key-value store.
 
 The wallet obtains all the header-chains advertised by its peers and verifies their Proof-of-Work. It then only keeps the heaviest valid chain for further processing. Subsequently it makes use of the \texttt{block\-chain.\allowbreak script\-hash.\allowbreak get\_history}
