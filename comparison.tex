@@ -31,6 +31,13 @@ SPV      &UTXO&Transparent&$\Theta(n+y(1+\lg(\alpha))$&$\Theta(n+y(1+\lg(\alpha)
 Electrum &UTXO&Transparent&$\Theta(n+y(1+\lg(\alpha))$&$\Theta(n+y(1+\lg(\alpha))$&$\Theta(1)$&     &     &\full&     &     \\
 Neutrino &UTXO&Transparent&$\Theta(n+y)$&$\Theta(n+y\alpha)$&$\Theta(1)$  &\full&\half&\full&\full&\full\\
 Yoroi    &UTXO&Transparent&$\Theta(y)$  &$\Theta(y)$  &$\Theta(1)$  &     &     &     &     &     \\
+Full Node&Account&Transparent&$\Theta(n+m)$&$\Theta(n+m)$&$\Theta(1)$  &\full&\full&\full&\full&\full\\
+Metamask &Account&Transparent&$\Theta(y)$  &$\Theta(y)$  &$\Theta(1)$  &     &     &     &     &     \\
+Full Node&UTXO&Privacy&$\Theta(n+m)$&$\Theta(n+m)$&$\Theta(1)$  &\full&\full&\full&\full&\full\\
+SPV      &UTXO&Privacy&$\Theta(n+m)$&$\Theta(n+m)$&$\Theta(1)$&\full&\full&\full&\full&\full\\
+MyMonero &UTXO&Privacy&$\Theta(y)$&$\Theta(1)$&$\Theta(m)$&     &     &     &     &     \\
+Light&Both&Transparent&$\Theta(polylog(n) + y(1+\lg(\alpha)))$&$\Theta(polylog(n) + y(1+\lg(\alpha)))$&$\Theta(1)$&\full&     &\full&\full&\full\\
+Light&UTXO&Privacy&$\Theta(polylog(n) + y(1+\lg(\alpha)))$&$\Theta(polylog(n) + y(1+\lg(\alpha)))$&$\Theta(m)$&\full&     &\full&\full&     \\
 \hline
 \end{tabular}
 \end{table*}
