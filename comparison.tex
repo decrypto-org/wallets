@@ -1,4 +1,5 @@
 \section{Comparison}
+\label{comparison}
 \newcolumntype{R}[2]{%
     >{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}%
     l%
@@ -10,7 +11,7 @@
 \def\full{{\freeserif \char9679}}
 
 \begin{table*}
-\caption{A comparison of the cryptocurrency wallets in practice. Server computation only refers to the computation the server is required to do to serve a new wallet and does not include previous or continuous computation like maintaining an address index. Partial vulnerability to an attack is denoted with \half{} and full vulnerability is denoted with \full.\label{comparison}}
+\caption{A comparison of the cryptocurrency wallets in practice. Server computation only refers to the computation the server is required to do to serve a new wallet and does not include previous or continuous computation like maintaining an address index. Partial vulnerability to an attack is denoted with \half{} and full vulnerability is denoted with \full.\label{tbl:comparison}}
 \centering
 \begin{tabular}{r|c|c|ccc|ccccc}
 \multicolumn{3}{c}{} &
@@ -77,7 +78,7 @@ Our security comparison focuses on the following aspects.
     \item \textbf{Uncensorability}: Whether the server is not able to lie by omitting transactions from the wallet.
 \end{itemize}
 
-A comparison of the wallets in tabular form is presented in \cref{comparison}.
+A comparison of the wallets in tabular form is presented in \cref{tbl:comparison}.
 
 \subsection{Communication}
 The full node requires the most amount of communication, $n+m$ as all full blocks must be downloaded. This is the case for both UTXO and account models.

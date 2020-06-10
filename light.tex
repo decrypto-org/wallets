@@ -1,4 +1,5 @@
 \section{Light Wallets}
+\label{light}
 \begin{definition}[Light wallet]
 A wallet is called \emph{light} if it can be usable in all 3 aspects (transaction description funding, balance and transaction history) by having a communication complexity of $o(n)$ (assuming a constant number of relevant transactions).
 \end{definition}
@@ -14,6 +15,7 @@ A \emph{light client} is an ITM that after communicating with a set of parties $
 A parallel must be drawn to the verifier in~\cite{nipopows}. The verifier is non-interactive whereas we also allow interactive protocols for a light client. In NIPoPoWs a proof for the tip of the chain is called a suffix proof and a proof for the inclusion of some block in a chain is called an infix proof. A final difference is that in NIPoPoWs the proof size is fixed as $O(polylog(n))$ whereas our definition is more general, allowing any sublinear proof size.
 
 \subsection{An ideal construction}
+\label{light-ideal}
 Suppose a hypothetical cryptocurrency where we can specify the format of the block header.
 
 \begin{enumerate}
@@ -45,6 +47,7 @@ Assume an adversarial server that succeeds in hiding transactions from the light
 Although such helpful commitments have been proposed to aid in building light and secure wallets since as early as 2012~\cite{ultimate}, such commitments do not exist in either Bitcoin or Ethereum today. We remark that such commitments could be incorporated as a non-contentious soft-fork.
 
 \subsection{Private cryptocurrencies}
+\label{light-private}
 We now turn our attention to building light clients for private cryptocurrencies. ZCash recently announced the upcoming Heartwood hard-fork that will include FlyClient support~\cite{zcash-heartwood-news} by means of adding a Merkle Mountain Range commitment to its block headers~\cite{zcash-flyclient-zip}. The addition is warranted as, according to the company in~\cite{zcash-heartwood-news} ``Flyclient enables interoperability efforts, cross-chain integration and light-client use cases''.
 
 It is interesting to note however that even though light clients are a welcome improvement, no straightforward light wallet solution has been proposed for a light client of a private cryptocurrency. For a potential solution, there exist two possible paths.

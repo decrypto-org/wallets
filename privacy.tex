@@ -1,4 +1,5 @@
 \section{Privacy Wallets}
+\label{privacy}
 In this section we will discuss wallets for ZCash, one of the most prominent private cryptocurrencies.
 
 We first examine the requirements for a ZCash wallet to be functional. To create a new transaction sending funds to some party, the wallet needs to know the unspent outputs belonging to the user. From these outputs the amount and some auxillary values must be discovered, in order to allow the wallet to create a nullifier for the commitment and spend it. In order to create a valid transaction with a valid Zero Knowledge proof the wallet also needs to know the full contents of the commitment tree, to prove that they are spending a commitment included in that tree.

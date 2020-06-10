@@ -14,9 +14,10 @@ Unfortunately until today no exposition of all proposed solutions exists. This h
 
 \paragraph{Our contributions.} In this work, we:
 \begin{itemize}
-    \item Define the purpose of a cryptocurrency wallet: to create and broadcast valid transactions, to know the balance and to know the transaction history.
-    \item Provide detailed descriptions of how wallets in practice work for both transparent and private blockchains.
-    \item Compare the known wallet protocols on their performance and security characteristics.
-    \item Define for the first time the functionality of light clients, which are commonly conflated with light wallets.
-    \item Provide a construction for light wallets based on a light client.
+    \item Define the purpose of a cryptocurrency wallet: to create and broadcast valid transactions, to know the balance and to know the transaction history in~\cref{model}.
+    \item Provide detailed descriptions of how wallets in practice work for transparent cryptocurrencies in both the UTXO (\cref{transparent-utxo}) and account (\cref{transparent-account}) models.
+    \item Describe existing solutions for wallets for private cryptocurrencies in the UTXO model in~\cref{privacy}.
+    \item Define for the first time the functionality of light clients, which are commonly conflated with light wallets in~\cref{light}.
+    \item Provide constructions for light wallets based on a light client for transparent (\cref{light-ideal}) and private (\cref{light-private}) cryptocurrencies.
+    \item Compare all wallet protocols on their performance and security characteristics in~\cref{comparison}.
 \end{itemize}
