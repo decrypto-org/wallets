@@ -15,7 +15,7 @@ SPV nodes for private cryptocurrencies don't exist in practice due to the detect
 
 A hypothetical SPV wallet however, could avoid performing verification of the chain contents (the transactions) and only perform verification of the header-chain. While this does not reduce the bandwidth requirements of an SPV wallet, it could significantly reduce the computation time for syncing. This is especially important in the case of ZCash where verifying the validity of a zero-knowledge proof of a transaction may take time in the order of milliseconds.
 
-\subsubsection{Compact Blocks}
+\paragraph{Compact Blocks.}
 In ZIP-307 an optimization for bandwidth is proposed. The optimization lies in noticing that since under the assumption of SPV security transactions don't need to be verified, transactions only need to hold the minimum amount of data such that they are detectable. By only keeping this data, transactions are compressed. Block headers remain unchanged. The new block structure including these compressed transactions is dubbed a compact block.
 
 This is a backwards-compatible change to the ZCash network that does not require any consensus changes. Blocks are adapted to this compact block format by any interested server and are subsequently relayed to any clients that request them.
