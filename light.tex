@@ -1,7 +1,6 @@
 \section{Light Wallets}
 \begin{definition}[Light wallet]
-A wallet is called \emph{light} if it can be usable in all 3 aspects (transaction description funding, balance and transaction history) by having a communication complexity of $o(n+m)$.
-%TODO: not right. I need to talk about how many blocks, how much data and how much auxillary information must be transmitted, which doesn't seem like it can be captured very well with asymptotics.
+A wallet is called \emph{light} if it can be usable in all 3 aspects (transaction description funding, balance and transaction history) by having a communication complexity of $o(n)$ (assuming a constant number of relevant transactions).
 \end{definition}
 
 \begin{definition}[Light client]
