@@ -1,22 +1,10 @@
 \section{Our Model}
-\begin{definition}
-    A cryptocurrency wallet $W_\text{seed}$ is a pair of algorithms (\textsf{Sync}, \textsf{History}, \textsf{Spend}).
-    
-    $\mathsf{Sync}(\text{state}) \rightarrow \text{state}'$: Takes a user's cryptocurrency seed and the wallet state$'$ and produces a new wallet state' after interacting with network participants. We denote the initial state as $\varepsilon$.
-    
-    $\mathsf{History}(\text{state}) \rightarrow 2^\textsc{TXs}$: Returns the transaction history for the wallet seed.
-    
-    $\mathsf{Spend}(\text{state}, \text{txDescription}) \rightarrow \text{tx}$: Takes a transaction description txDescription and returns a valid transaction tx that spends from funds owned by the wallet's seed.
-\end{definition}
-
-\paragraph{Computational Complexity.} Computation to restore from a seed.
-\paragraph{Communication Complexity.} Bandwidth to restore from a seed.
-\paragraph{Privacy.} Do we disclose any private key to an external participant or server?
-
-Intuitively, the wallet should offer three important functions. Given a seed and the ability of network interactions, it should present the user with:
+A cryptocurrency wallet facilitates the transfer of funds between individuals. The wallet contains the private keys that can be used to spend the user's cryptocurrency. With those private keys, it should be able to fulfill at least the following roles.
 
 \begin{enumerate}
-    \item Their balance.
-    \item Their transaction history.
-    \item The ability to create new valid transactions, given a description.
+    \item Present the user with their balance.
+    \item Allow the user create new valid transactions, given a description.
+    \item (Optionally) Present the user with their transaction history.
 \end{enumerate}
+
+The lifecycle of the wallet is as follows. First the user generates a new seed or recovers from an existing seed, which is their secret. The wallet then performs an initial synchronisation by using the network, in order to obtain everything necessary for it to be able to perform the aforementioned functions. We denote this synchronisation step as $\text{Sync}_{\Gen, \mathcal{S}}$, where $\Gen$ is the genesis block of the blockchain and $\mathcal{S}$ a set of servers the wallet is allowed to interact with. After this initial synchronisation is complete, the wallet keeps using the network to stay up to date with relevant relevant events such as the user receiving a new transaction. The user may shut down the wallet and start it at some other point in time, when the wallet will attempt to catch-up to the network in order to be able to provide once again the aforementioned functionality.
