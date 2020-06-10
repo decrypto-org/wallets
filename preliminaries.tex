@@ -115,6 +115,12 @@ Application of a sequence of transactions occurs by applying each transaction an
 \text{apply}(st, [tx_1, tx_2, \dots, tx_z]) = \text{apply}(\text{apply}(st, tx_1), [tx_2, \dots, tx_z])
 \]
 
+\subsection{Network Actors}
+\paragraph{Full Nodes}
+A \emph{full node} maintains the full block chain, along with every transaction. Every transaction is verified for validity and a block that contains an invalid transaction is considered invalid by the full node. The full node participates in a Peer-to-Peer (P2P) network. Other nodes may request blocks or transactions from it, and it serves them akin to a relay.
+\paragraph{Miners}
+A \emph{miner} is a full node that also attempts to mine a new block on top of the best block chain. If a block is successfully mined, it is broadcasted to the P2P network of full nodes for them to consider adopting it.
+
 \subsection{Simple Payment Verification}
 Simple Payment Verification first appeared in the Bitcoin whitepaper~\cite{bitcoin} as a wait for nodes to figure out their transactions without the need to download and store full blocks. An SPV client works by obtaining the header-chain from other full nodes and validating it. Upon doing that, it can verify any transaction is included in one of the blocks by verifying a Merkle inclusion proof against a Merkle root in one of the headers. We will now formally define an SPV client.
 
