@@ -113,6 +113,8 @@ Application of a sequence of transactions occurs by applying each transaction an
 $\text{apply}(st, [tx_1, tx_2, \dots, tx_z]) = \text{apply}(\text{apply}(st, tx_1), [tx_2, \dots, tx_z])$
 with $\text{apply}(st, []) = st$.
 
+A block $b$ is split in two parts, the header and the body. The header is a fixed-size string, and the body is the place where all transactions reside. All the transactions in a block's body are committed to in the block's header, usually in the form of a Merkle Tree root over all of them. A block with its body is what we call a \emph{full block}. We will use $\chain[i]$ to refer to a block header or the full block at height $i$ interchangeably, as well as $\chain$ to refer to both the header chain and the full block chain.
+
 \subsection{Network Actors}
 \paragraph{Full Nodes}
 A \emph{full node} maintains the full block chain, along with every transaction. Every transaction is verified for validity and a block that contains an invalid transaction is considered invalid by the full node. The full node participates in a Peer-to-Peer (P2P) network. Other nodes may request blocks or transactions from it, and it serves them akin to a relay.
