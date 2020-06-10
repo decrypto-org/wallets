@@ -1,0 +1,3 @@
+[submodule "third_party/acmart"]
+	path = third_party/acmart
+	url = https://github.com/borisveytsman/acmart
