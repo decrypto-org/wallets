@@ -14,7 +14,7 @@
 \centering
 \begin{tabular}{r|c|c|ccc|ccccc}
 \multicolumn{3}{c}{} &
-\rot{Bandwidth} &
+\rot{Communication} &
 \rot{Client computation} &
 \rot{Server lookups*} &
 \rot{Open participation} &
@@ -63,18 +63,18 @@ We now provide a comparison between all the wallets presented. The notation used
 Our performance comparison is asymptotic in terms of the aforementioned variables and is broken down on the following aspects.
 
 \begin{itemize}
-    \item \textbf{Bandwidth}: The bandwidth necessary to fully synchronise a wallet from scratch.
-    \item \textbf{Server computation}: Any computation necessary for the server to perform in order to aid the synchronisation of a new wallet.
+    \item \textbf{Communication}: The communication complexity between the wallet and server necessary to fully synchronise from scratch.
     \item \textbf{Client computation}: Any computation it is necessary for the wallet to perform in order to finish synchronisation and enter a usable state (for funding transaction descriptions, balance and transaction history).
+    \item \textbf{Server lookups}: Computation the server needs to decide what data it needs to relay to the wallet. In the case of SPV this can be bloom filter checks, in the case of private wallets it can be trial-decryption with a viewing key.
 \end{itemize}
 
 Our security comparison focuses on the following aspects.
 \begin{itemize}
     \item \textbf{Open participation}: Whether participating as a wallet's server is possible for everyone.
     \item \textbf{Privacy}: Whether the wallet reveals information about the user's addresses to any server in order to synchronise.
-    \item \textbf{No double-spend advantage}: Whether any server has an advantage over any other network participant to perform a double-spend attack on the user through the wallet.
-    \item \textbf{Only valid transactions}: Whether the wallet may accept transactions that are not part of the best chain.
-    \item \textbf{Uncensorability}: Whether the server can censor transactions.
+    \item \textbf{Chain check}: We say that a wallet fulfills chain check whether the wallet will only accept transactions included in the best chain.
+    \item \textbf{Signature check}: Whether the wallet fulfulls signature check when it performs basic validity checks on the transctions, including signature verification for existing outgoing transactions.
+    \item \textbf{Uncensorability}: Whether the server is not able to lie by omitting transactions from the wallet.
 \end{itemize}
 
 A comparison of the wallets in tabular form is presented in \cref{comparison}.
