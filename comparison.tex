@@ -138,6 +138,8 @@ For Neutrino, addresses are not leaked directly, however full blocks are only re
 In MyMonero and our light client solution for private cryptocurrencies the private viewing key is directly provided to the server, leading to complete privacy loss.
 
 \subsection{Chain check}
+\paragraph{Motivation.} If the wallet does not verify the transactions it receives, we show an easy attack that can be performed against its user. Assume the user of the wallet is a vendor that provides an item for some fee in Bitcoin. A transaction that looks like it directs funds to the vendor can very easily faked. A full node would not accept that transaction, as it spends inputs that are already spent or never existed. However, if the wallet performs no check that the transactions received are in the best chain, it cannot know that the transaction is fake. The attack works as follows. The server, who now is a customer of the vendor, presents the vendor's wallet with a fake transaction. The wallet shows the transaction but performs no check and considers it valid. The vendor is satisfied enough and ships the item, for which the customer never actually paid.
+
 The full node by definition verifies that any transaction used is contained in the best chain.
 
 BIP-37 SPV wallets and Electrum perform verification of Merkle proofs of inclusion against the longest header-chain provided. By SPV security we know that chain is actually the best chain a honest full node would adopt, so transactions are actually verified against inclusion in the best chain.
