@@ -113,7 +113,7 @@ Application of a sequence of transactions occurs by applying each transaction an
 \[
 \left\{
     \begin{array}{rl}
-        \text{apply}(st, [tx_1, tx_2, \dots, tx_z]) &= \text{apply}(\text{apply}(st, tx_1), [tx_2, \dots, tx_z]) \\
+        \text{apply}(st, [tx_1, \dots, tx_z]) &= \text{apply}(\text{apply}(st, tx_1), [tx_2, \dots, tx_z]) \\
         \text{apply}(st, []) &= st
     \end{array}
 \right.
