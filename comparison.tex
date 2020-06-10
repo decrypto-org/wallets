@@ -23,21 +23,21 @@
 \rot{Signature check} &
 \rot{Uncensorability}
 \\ \hline
-\emph{Proposal}&Model&Transparency&\multicolumn{3}{c|}{\emph{Performance}}&\multicolumn{5}{c}{\emph{Security}} \\
+\emph{Proposal}&Model&Transparency&\multicolumn{3}{c|}{\emph{Performance $\Theta(\cdot)$}}&\multicolumn{5}{c}{\emph{Security}} \\
 \hline
 %name    &mode&transp     &bandwidt&client  &server  &open &priva&dblad&onval&uncen
-Full Node&UTXO&Transparent&$\Theta(n+m)$&$\Theta(n+m)$&$\Theta(1)$  &\full&\full&\full&\full&\full\\
-SPV      &UTXO&Transparent&$\Theta(n+y\lg(\alpha))$&$\Theta(n+y\lg(\alpha))$&$\Theta(m)$&\full&\half&\full&\full&     \\
-Electrum &UTXO&Transparent&$\Theta(n+y\lg(\alpha))$&$\Theta(n+y\lg(\alpha))$&$\Theta(1)$&     &     &\full&     &     \\
-Neutrino &UTXO&Transparent&$\Theta(n+y)$&$\Theta(n+y\alpha)$&$\Theta(1)$  &\full&\half&\full&\full&\full\\
-Yoroi    &UTXO&Transparent&$\Theta(y)$  &$\Theta(y)$  &$\Theta(1)$  &     &     &     &     &     \\
-Full Node&Account&Transparent&$\Theta(n+m)$&$\Theta(n+m)$&$\Theta(1)$  &\full&\full&\full&\full&\full\\
-Metamask &Account&Transparent&$\Theta(y)$  &$\Theta(y)$  &$\Theta(1)$  &     &     &     &     &     \\
-Full Node&UTXO&Privacy&$\Theta(n+m)$&$\Theta(n+m)$&$\Theta(1)$  &\full&\full&\full&\full&\full\\
-SPV      &UTXO&Privacy&$\Theta(n+m)$&$\Theta(n+m)$&$\Theta(1)$&\full&\full&\full&\full&\full\\
-MyMonero &UTXO&Privacy&$\Theta(y)$&$\Theta(1)$&$\Theta(m)$&     &     &     &     &     \\
-Light&Both&Transparent&$\Theta(polylog(n) + y\lg(\alpha)))$&$\Theta(polylog(n) + y\lg(\alpha)))$&$\Theta(1)$&\full&     &\full&\full&\full\\
-Light&UTXO&Privacy&$\Theta(polylog(n) + y\lg(\alpha)))$&$\Theta(polylog(n) + y\lg(\alpha)))$&$\Theta(m)$&\full&     &\full&\full&     \\
+Full Node&UTXO&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
+SPV      &UTXO&Transparent&$n+y\lg{\alpha}$&$n+y\lg{\alpha}$&$m$&\full&\half&\full&\full&     \\
+Electrum &UTXO&Transparent&$n+y\lg{\alpha}$&$n+y\lg{\alpha}$&$1$&     &     &\full&     &     \\
+Neutrino &UTXO&Transparent&$n+y$&$n+y\alpha$&$1$  &\full&\half&\full&\full&\full\\
+Yoroi    &UTXO&Transparent&$y$  &$y$  &$1$  &     &     &     &     &     \\
+Full Node&Account&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
+Metamask &Account&Transparent&$y$  &$y$  &$1$  &     &     &     &     &     \\
+Full Node&UTXO&Privacy&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
+SPV      &UTXO&Privacy&$n+m$&$n+m$&$1$&\full&\full&\full&\full&\full\\
+MyMonero &UTXO&Privacy&$y$&$1$&$m$&     &     &     &     &     \\
+Light&Both&Transparent&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$1$&\full&     &\full&\full&\full\\
+Light&UTXO&Privacy&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$m$&\full&     &\full&\full&     \\
 \hline
 \end{tabular}
 \end{table*}
