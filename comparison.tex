@@ -33,7 +33,7 @@
 Full Node&UTXO&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
 SPV      &UTXO&Transparent&$n+y\lg{\alpha}$&$n+y\lg{\alpha}$&$m$&\full&\half&\full&\full&     \\
 Electrum &UTXO&Transparent&$n+y\lg{\alpha}$&$n+y\lg{\alpha}$&$1$&     &     &\full&     &     \\
-Neutrino &UTXO&Transparent&$n+y$&$n+y\alpha$&$1$  &\full&\half&\full&\full&\full\\
+Neutrino &UTXO&Transparent&$n+y\alpha$&$n+y\alpha$&$1$  &\full&\half&\full&\full&\full\\
 Yoroi    &UTXO&Transparent&$y$  &$1$  &$1$  &     &     &     &     &     \\
 Full Node&Account&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
 Metamask &Account&Transparent&$y$  &$1$  &$1$  &     &     &     &     &     \\
@@ -79,17 +79,83 @@ Our security comparison focuses on the following aspects.
 
 A comparison of the wallets in tabular form is presented in \cref{comparison}.
 
-\subsection{Full Node}
-The full node requires the most amount of bandwidth, $O(n+m)$ as all full blocks must be downloaded. The amount of client computation is identical as every block and transaction needs to be verified. However, for servicing the full node other nodes need not perform any special computation and can simply act as relays. The network of a permisionless cryptocurrency's full node is open to participation by definition. No information pertaining to the wallet addresses can be produced by the network based on what subset of transactions the full node downloads, as it downloads all of them. Additionally the full node never explicitly advertises its addresses. Similarly as it verifies all blocks it is not vulnerable to double-spend or invalid transaction acceptance attacks.
+\subsection{Communication}
+The full node requires the most amount of communication, $n+m$ as all full blocks must be downloaded. This is the case for both UTXO and account models.
 
-\subsection{BIP-37 SPV}
-For SPV the bandwidth is $O(n+y)$. $O(n)$ due to all block headers and $O(y)$ due to all (hopefully) relevant transactions downloaded. For each block header verification takes place and for each relevant transaction verification of its attached Merkle proof takes place, thus client computation is also $O(n+y)$. BIP-37 SPV's weak point is in server computation however, as the server looks though every single transaction in history to evaluate if it matches the bloom filter or not, thus it has the worst server computation complexity of all proposals, $O(n+m)$. Again, any full node can participate in the BIP-37 SPV network as a server. Addresses are not directly provided to the server, and some of the transactions detected as relevant by the server may not actually implicate the user, due to the bloom filter's false positive rate. The false positive rate is configurable and privacy-minded users may set a high false positive rate so as to create noise, but this comes at the cost of bandwidth. We conclude that this proposal does leak information about the user's addresses to the server. Double-spending and invalid transaction acceptance attacks are infeasible due to SPV security, which states that as long as the adversarial mining power is upper bounded by $50\%$ of the total mining power the block contents of the stable part of the best chain are valid.
+SPV implementations for transparent cryptocurrencies require $n+y\lg{\alpha}$ of communication, which is broken down as (a) each block header (b) each relevant transaction and (c) a Merkle inclusion proof for each transaction. In the worst case each transaction belongs to a different block and no re-use of parts of the proof can take place thus we need $y$ proofs of size $\lg{\alpha}$ each.
 
-\subsection{Electrum}
-In Electrum the client receives all chain headers similar to BIP-37 SPV, and then processes all relevant transactions relayed by the primary server resulting in $O(n+y)$ bandwidth and $O(n+y)$ computation. The server however, simply relays all block headers, and because it maintains an index of addresses to transactions where it can just look up the client's advertised addresses its computation is $O(y)$. Server addresses are hardcoded in the Electrum software so participation is limited. Addresses are directly leaked to the servers for efficiency. Double spend and invalid transaction acceptance attacks are again impossible due to SPV security.
+Electrum-based implementations for UTXO have the same communication complexity. In Neutrino, all block headers need to be downloaded as well. In addition, for every block including a relevant transaction it also needs to be downloaded in full. In the worst case each relevant transaction will be included in a different block yielding a communication complexity of $n+y\alpha$.
 
-\subsection{Neutrino}
-Neutrino downloads all chain headers and for each transaction of interest the full block it belongs to, yielding $O(n+y)$ bandwidth. The client needs to verify the header chain, compare its filter to each block filter to detect relevant transactions and verify the full blocks received match the corresponding blocks in the header chain, yielding a client computation of $O(n+y)$. The strong point of Neutrino is server computation. The server simply acts as a relay of information so the computation is constant. Neutrino is planned to be integrated in the full node P2P protocol which makes participation open. Addresses are not leaked directly, however full blocks are only received when they contain transactions of interest which could yield some information about the identity of the client to an adversary. Due to SPV security other attacks are impossible.
+Yoroi, Metamask and MyMonero are all querying a trusted-third party and obtain the relevant transactions directly, thus have a communication complexity of $y$.
 
-\subsection{Yoroi}
-Yoroi only downloads purported relevant transactions from the explorer, which is $O(y)$. It simply stores the transactions and maintains a UTXO set, which yields $O(y)$ computation on the client. The server simply looks up the transactions of the provided addresses on an index and returns all of them, resulting in $O(y)$ computation. As the server address is hardcoded in the software, this is not a P2P protocol and participation is not open. Addresses are leaked directly to the server. The client does not perform any check that the transactions are actually valid or that they belong in the best chain, thus a double spend attack is feasible.
+SPV wallets for private cryptocurrencies that do not reveal the private viewing key to a server require that all full blocks be downloaded, resulting in $n+m$ communication complexity.
+
+Our light wallets based on some NIPoPoW light client have a communication complexity of $\polylog{n} + y\lg{\alpha}$. The reason is that the best chain and any block in it can be synced using only a sample of $\polylog{n}$ blocks, and for each transaction a Merkle proof is sent to link it to its corresponding block. This holds for both transparent and private constructions, where the private viewing key is revealed.
+
+\subsection{Client computation}
+Full nodes need to very all blocks and transactions in history resulting in $n+m$ computation.
+
+In SPV wallets, for each block header verification takes place and for each relevant transaction verification of its attached Merkle proof takes place, thus client computation is also $n+y\lg{\alpha}$. The same holds for Electrum-based wallets.
+
+For Neutrino the client computation is $n+y\alpha$, as every header is verified and the full block including each transaction is also verified.
+
+Explorer-based wallets base their security on a trusted third party and perform no verification of what they obtain from the server, thus yielding a complexity of $1$. The same is true for privacy wallet MyMonero.
+
+Our light wallets based on NIPoPoWs verify NIPoPoW infix proofs and for each relevant transaction its inclusion in a block of the proof, resulting in a client computation of $\polylog{n} + y\lg{\alpha}$.
+
+\subsection{Server lookups}
+
+A full node server (its peer) does not need to perform any lookup to evaluate what it needs to send to the client, yielding lookups of order $1$.
+
+BIP-37 SPV's weak point is in server lookups, as the server looks though every single transaction in history to evaluate if it matches the provided bloom filter or not, thus it has the worst server computation complexity of all proposals, $n+m$.
+
+An Electrum server, simply relays all block headers, and because it maintains an index of addresses to transactions where it can just look up the client's advertised addresses, resulting in a constant number of lookups.
+
+The strong point of Neutrino is server lookups compared to BIP-37 that it is designed to replace. The server simply acts as a relay of information so the number of lookups is constant.
+
+Explorer-based wallet servers (i.e. explorers) also hold an index of addresses to their corresponding transactions as Electrum servers do. Similarly to electrum, server lookups are constant.
+
+\subsection{Open Participation}
+The full node network is P2P and fully open to participation.  Additionally full nodes usually act as servers for BIP-37 SPV wallets, making them to open to participation.
+
+Server addresses are hardcoded in the Electrum software so participation is limited.
+
+Neutrino is planned to be integrated in the full node P2P protocol which makes participation open.
+
+For explorer-based wallets, the server address is hardcoded in the software, this is not a P2P protocol and participation is not open.
+
+\subsection{Privacy}
+A full node has the best privacy as everything is downloaded thus no network peer can distinguish which transactions or blocks are of interest. The address of the wallet is never revealed to the network. 
+
+SPV wallets reveal a lot of information to the servers, even though the addresses are not directly revealed as shown in~\cite{gervais2014privacy}.
+
+% TODO: SPV IN PRIVATE CRYPTOS NOT PRIVATE
+
+In Electrum, and explorer-based wallets addresses are directly provided to the servers for efficiency.
+
+For Neutrino, addresses are not leaked directly, however full blocks are only received when they contain transactions of interest which could yield some information about the identity of the client to an adversary. Due to SPV security other attacks are impossible.
+
+In MyMonero and our light client solution for private cryptocurrencies the private viewing key is directly provided to the server, leading to complete privacy loss.
+
+\subsection{Chain check}
+The full node by definition verifies that any transaction used is contained in the best chain.
+
+BIP-37 SPV wallets and Electrum perform verification of Merkle proofs of inclusion against the longest header-chain provided. By SPV security we know that chain is actually the best chain a honest full node would adopt, so transactions are actually verified against inclusion in the best chain.
+
+Neutrino also maintains the best chain due to SPV security. For blocks that contain transactions of interest the whole block is downloaded and verified against some header in the best header chain.
+
+Explorer-based wallets do not have any notion of a chain locally and trust the transactions provided. Thus the server could provided transactions that are not part of the best chain and the wallet would have no way of knowing.
+
+Our light wallet constructions synchronise the best chain due to NIPoPoW security. All transactions provided are checked against blocks in that chain.
+
+%TODO: \subsection{Signature check}
+
+\subsection{Uncensorability}
+A full node cannot be censored as it obtains all transactions and holds the full blocks.
+
+Unfortunately for most other solutions: SPV, Electrum, explorer-based, MyMonero the server can very easily not include transactions and the wallet has no way of knowing.
+
+For Neutrino however, as long as the filters are correct, transactions cannot be censored. If a filter matches the whole block is downloaded and verified.
+
+Finally, for our ideal light wallet construction as proven in~\cref{light-uncensorability} no censorship of transactions can take place.
+For our light wallet construction for private cryptocurrencies no such commitment exists to prevent censorship and the server may lie by omitting transactions with no way to be detected.
