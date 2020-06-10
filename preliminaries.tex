@@ -109,11 +109,9 @@ Whether in the UTXO or account model, we say that each block has a state. The st
 \right.
 \]
 
-Application of a sequence of transactions occurs by applying each transaction and using the new state for the next application. More formally:
-
-\[
-\text{apply}(st, [tx_1, tx_2, \dots, tx_z]) = \text{apply}(\text{apply}(st, tx_1), [tx_2, \dots, tx_z])
-\]
+Application of a sequence of transactions occurs by applying each transaction and using the new state for the next application. More formally
+$\text{apply}(st, [tx_1, tx_2, \dots, tx_z]) = \text{apply}(\text{apply}(st, tx_1), [tx_2, \dots, tx_z])$
+with $\text{apply}(st, []) = st$.
 
 \subsection{Network Actors}
 \paragraph{Full Nodes}
