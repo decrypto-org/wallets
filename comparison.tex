@@ -42,8 +42,8 @@ Electrum-like* &Account&Transparent&$n+y\lg{\alpha}$  &$n+y\lg{\alpha}$  &$1$  &
 Full Node&UTXO&Privacy&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
 SPV      &UTXO&Privacy&$n+m$&$n+m$&$1$&\full&\full&\full&\full&\full\\
 MyMonero &UTXO&Privacy&$y$&$1$&$m$&     &     &     &     &     \\
-Light*&Both&Transparent&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$1$&\full&     &\full&\full&\full\\
-Light*&UTXO&Privacy&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$m$&\full&     &\full&\full&     \\
+Superlight (this work)&Both&Transparent&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$1$&\full&     &\full&\full&\full\\
+Superlight (this work)&UTXO&Privacy&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$m$&\full&     &\full&\full&     \\
 \hline
 \end{tabular}
 \end{table*}
@@ -91,7 +91,7 @@ Yoroi, Metamask and MyMonero are all querying a trusted-third party and obtain t
 
 SPV wallets for private cryptocurrencies that do not reveal the private viewing key to a server require that all full blocks be downloaded, resulting in $n+m$ communication complexity.
 
-Our light wallets based on some NIPoPoW light client have a communication complexity of $\polylog{n} + y\lg{\alpha}$. The reason is that the best chain and any block in it can be synced using only a sample of $\polylog{n}$ blocks, and for each transaction a Merkle proof is sent to link it to its corresponding block. This holds for both transparent and private constructions, where the private viewing key is revealed.
+Our superlight wallets based on some NIPoPoW superlight client have a communication complexity of $\polylog{n} + y\lg{\alpha}$. The reason is that the best chain and any block in it can be synced using only a sample of $\polylog{n}$ blocks, and for each transaction a Merkle proof is sent to link it to its corresponding block. This holds for both transparent and private constructions, where the private viewing key is revealed.
 
 \subsection{Client computation}
 Full nodes need to very all blocks and transactions in history resulting in $n+m$ computation.
@@ -102,7 +102,7 @@ For Neutrino the client computation is $n+y\alpha$, as every header is verified 
 
 Explorer-based wallets base their security on a trusted third party and perform no verification of what they obtain from the server, thus yielding a complexity of $1$. The same is true for privacy wallet MyMonero.
 
-Our light wallets based on NIPoPoWs verify NIPoPoW infix proofs and for each relevant transaction its inclusion in a block of the proof, resulting in a client computation of $\polylog{n} + y\lg{\alpha}$.
+Our superlight wallets based on NIPoPoWs verify NIPoPoW infix proofs and for each relevant transaction its inclusion in a block of the proof, resulting in a client computation of $\polylog{n} + y\lg{\alpha}$.
 
 \subsection{Server lookups}
 
@@ -136,7 +136,7 @@ In Electrum, and explorer-based wallets addresses are directly provided to the s
 
 For Neutrino, addresses are not leaked directly, however full blocks are only received when they contain transactions of interest which could yield some information about the identity of the client to an adversary. In~\cite{bip157} the mitigation proposed is that full blocks be queried from servers at random. However in the face of a Sybil attack~\cite{sybil} the same loss of privacy ensues.
 
-In MyMonero and our light client solution for private cryptocurrencies the private viewing key is directly provided to the server, leading to complete privacy loss.
+In MyMonero and our superlight client solution for private cryptocurrencies the private viewing key is directly provided to the server, leading to complete privacy loss.
 
 \subsection{Chain check}
 \paragraph{Motivation.} If the wallet does not verify the transactions it receives, we show an easy attack that can be performed against its user. Assume the user of the wallet is a vendor that provides an item for some fee in Bitcoin. A transaction that looks like it directs funds to the vendor can very easily faked. A full node would not accept that transaction, as it spends inputs that are already spent or never existed. However, if the wallet performs no check that the transactions received are in the best chain, it cannot know that the transaction is fake. The attack works as follows. The server, who now is a customer of the vendor, presents the vendor's wallet with a fake transaction. The wallet shows the transaction but performs no check and considers it valid. The vendor is satisfied enough and ships the item, for which the customer never actually paid.
@@ -149,7 +149,7 @@ Neutrino also maintains the best chain due to SPV security. For blocks that cont
 
 Explorer-based wallets do not have any notion of a chain locally and trust the transactions provided. Thus the server could provided transactions that are not part of the best chain and the wallet would have no way of knowing.
 
-Our light wallet constructions synchronise the best chain due to NIPoPoW security. All transactions provided are checked against blocks in that chain.
+Our superlight wallet constructions synchronise the best chain due to NIPoPoW security. All transactions provided are checked against blocks in that chain.
 
 %TODO: \subsection{Signature check}
 
@@ -160,5 +160,5 @@ Unfortunately for most other solutions: SPV, Electrum, explorer-based, MyMonero 
 
 For Neutrino however, as long as the filters are correct, transactions cannot be censored. If a filter matches the whole block is downloaded and verified.
 
-Finally, for our ideal light wallet construction as proven in~\cref{light-uncensorability} no censorship of transactions can take place.
-For our light wallet construction for private cryptocurrencies no such commitment exists to prevent censorship and the server may lie by omitting transactions with no way to be detected.
+Finally, for our ideal superlight wallet construction as proven in~\cref{superlight-uncensorability} no censorship of transactions can take place.
+For our superlight wallet construction for private cryptocurrencies no such commitment exists to prevent censorship and the server may lie by omitting transactions with no way to be detected.
