@@ -64,7 +64,7 @@ Note that the protocol may seem wasteful, especially in case the header chain is
 \subsection{Electrum}
 %TODO: checkpoints
 Electrum~\cite{electrum} was the first alternative and so-called ``light'' wallet for Bitcoin after the reference implementation.
-The protocol it utilizes is as follows. First, the wallet connects to 10 servers chosen from a hardcoded list in the software. One of them is selected as primary at random. The servers speak a protocol specified by Electrum and originally proposed in~\cite{stratum} and not the full node protocol.
+The protocol it utilizes is as follows. First, the wallet connects to 10 servers chosen from a hardcoded list in the software. One of them is selected as primary at random. The servers speak an Electrum-specific protocol called Stratum which follows the design originally proposed in~\cite{stratum} and not the full node protocol.
 In Electrum, servers hold an address index over all historical transactions. In early versions~\cite{electrumserver} of the server the index was arranged in a Merkle Patricia Trie~\cite{ultimate}. The most widely used server implementation~\cite{electrumserverrust} does not arranging the index in this way and simply relies on an underlying key-value store.
 
 The wallet obtains all the header-chains advertised by its servers and verifies their Proof-of-Work. It then only keeps the heaviest valid chain for further processing. Subsequently it makes use of the \texttt{block\-chain.\allowbreak script\-hash.\allowbreak get\_history}
@@ -78,10 +78,10 @@ We remark that the Electrum protocol is more efficient than the previous SPV wal
 \subsection{Neutrino}
 Neutrino is a new proposal for more efficient light syncing on Bitcoin which aims to be an improvement over SPV.
 
-Neutrino requires a consensus change or soft fork, yet to occur for Bitcoin. With this change, in every block a commitment to a small bytearray is included which represents information about the block's transactions. Specifically, the bytearray which is called the \emph{filter} is a Golomb-Coded Set~\cite{golomb1966run}
+The simplest of its variants works as follows. It requires a hard or soft fork that is yet to occur for Bitcoin. With this fork, every block header includes a commitment to a bytearray which represents information about the block's transactions. Specifically, the bytearray which is called the \emph{filter} is a Golomb-Coded Set~\cite{golomb1966run}
 which encodes the set of all output scripts and the scripts of the outputs the inputs spend (except \texttt{OP\_RETURN}s for technical reasons). The full construction for the filter is described in~\cite{bip158}.
 
-With this filter in place the light wallet works as follows. Initially, it downloads all block headers as usual and verifies them. Then it proceeds to download the filter corresponding to each block. It then checks locally for every block if it contains transactions of interest by making use of the filter. If a block contains transactions of interest, all its transactions are requested without witness data (e.g. signatures and data belonging to unlocking scripts). Then from the transactions obtained the wallet can only keep the actual transactions of interest and discard the rest. The process is illustrated in~\cref{alg.neutrino}.
+With this filter in place the light wallet works as follows. Initially, it downloads all block headers as usual and verifies them. Then it proceeds to download the filter corresponding to each block. It then checks locally for every block if it contains transactions of interest by making use of the filter. If a block contains transactions of interest, all its transactions are requested without witness data (e.g. signatures and data belonging to unlocking scripts). Then from the transactions obtained the wallet only keeps the actual transactions of interest and discards the rest. The process is illustrated in~\cref{alg.neutrino}.
 
 \paragraph{Deployment paths.}
 We look at two ways of implementing Neutrino filters in an existing cryptocurrency like Bitcoin.
@@ -114,7 +114,7 @@ The improvements over SPV are twofold:
 \paragraph{Privacy.} In an SPV wallet, the transactions of interest to the wallet are directly leaked to the peer, except with some relative deniability due to the bloom filter's false positive rate. Due to the low false positive rate of a bloom filter and the widely known transaction linking heuristics that can be applied~\cite{meiklejohn2013fistful,gervais2014privacy}
 the peer can be almost certain which transactions belong to the same entity, breaking the pseudonymity of Bitcoin.
 \paragraph{Server performance.} Observe how in Neutrino the server does no special computation for each client in contrast with an SPV server. In Neutrino servers are essentially relays of information, which is much cheaper and makes it more appealing to operators to operate them.
-\paragraph{Client performance.} Additionally in contrast with SPV, if the wallet happens to hold the header-chain through some means, it can just obtain the filters without the need to redownload the already downloaded headers as is the case with SPV.
+\paragraph{Client performance.} Additionally, in contrast with SPV, if the wallet happens to hold the header-chain through some means, it can just obtain the filters without the need to redownload the already downloaded headers as is the case with SPV.
 
 However these improvements come at the cost of bandwidth. For each block its corresponding filter must be downloaded to detect relevant transactions in that block. The filter size for a 1.4MB block is approximately 20KB~\cite{jimmysong}. This is a significant overhead compared to SPV, where no such filter needs to be downloaded.
 
