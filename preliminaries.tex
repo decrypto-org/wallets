@@ -100,7 +100,7 @@ We adopt the Python notation to refer to parts of the chain, which is illustrate
     \end{tabular}
 \end{table*}
 
-Whether in the UTXO or account model, we say that each block has a state. The state of a block $\chain[i]$ is defined as the state of the previous block $\chain[i-1]$, upon application of all transactions present in $\chain[i]$. More formally, we define the state of a block as follows:
+Whether in the UTXO or account model, we say that each block has a state. The state of a block $\chain[i]$ is defined as the state of the previous block $\chain[i-1]$ upon application of all transactions present in $\chain[i]$. More formally, we define the state of a block as follows:
 
 \[
 \text{state}(\chain[i]) = \left\{
@@ -111,7 +111,7 @@ Whether in the UTXO or account model, we say that each block has a state. The st
 \right.
 \]
 
-Application of a sequence of transactions occurs by applying each transaction and using the new state for the next application. More formally
+Application of a sequence of transactions occurs by applying each transaction and using the new state for the next application. This can be written more formally as follows
 \[
 \left\{
     \begin{array}{rl}
@@ -138,16 +138,16 @@ An \emph{SPV client} is an ITM that knows a genesis block \textsf{Gen} and conne
 
 The assumption of at least one honest full node is necessary to avoid eclipse attacks~\cite{eclipse,eclipse-ethereum}.
 
-We state some theorems pertaining to the adopted chain of an SPV client which appear previously in~\cite{sok,sidechains} and are more formally derivable from the works of~\cite{backbone,garay2017bitcoin,pass2017analysis}.
+We state some results pertaining to the adopted chain of an SPV client which have appeared previously in~\cite{sok,sidechains} and are more formally derivable from the works of~\cite{backbone,garay2017bitcoin,pass2017analysis}.
 
 \begin{definition}[Honest majority assumption]
 The adversarial mining power is at all times upper bounded by the half of the total mining power of the network.
 \end{definition}
 
 \begin{theorem}[SPV security]
-Under the honest majority assumption, the stable part of an SPV client's adopted chain $\chain[:-k]$ is a prefix of the chain of the honest full node.
+Under the honest majority assumption, the stable part of an SPV client's adopted chain $\chain[:-k]$ is a prefix of the chain of an honest full node.
 \end{theorem}
 
 \begin{corollary}
-Under the honest majority assumption, the underlying full chain of the stable part of an SPV client's adopted chain is syntactically valid.
+Under the honest majority assumption, the underlying full chain of the stable part of an SPV client's adopted chain produces a valid state.
 \end{corollary}
