@@ -3,7 +3,7 @@
 
 A transaction description specifies the desired outputs of a transaction and a fee. In the simplest case of sending some funds to a specific address, the transaction description is comprised of a single P2PKH output.
 
-A wallet needs to be able to turn a transaction description into a valid transaction that will be accepted by full nodes in a process called funding. To fund a transaction description, the wallet performs the following steps:
+A wallet needs to be able to turn a transaction description into a valid transaction in a process called funding. To fund a transaction description, the wallet performs the following steps:
 
 \begin{itemize}
     \item Collect a set $S$ of unspent transaction outputs spendable by the public key such that $$\sum_{o \in S} o.\text{value} \ge \textsf{value}$$
@@ -14,7 +14,7 @@ A wallet needs to be able to turn a transaction description into a valid transac
 
 The balance of a wallet can be obtained as the sum of the values of all unspent outputs destined to public key.
 
-The transaction history of a wallet can be extracted from the set of all transactions implicating the public key. Specifically, inputs where are spent by the secret key are debits, and outputs which are directed to the public key are credits.
+The transaction history of a wallet can be extracted from the set of all transactions implicating the public key. Specifically, inputs which are spent by the secret key are debits, and outputs which are directed to the public key are credits.
 
 \subsection{Full Node}
 A full node contains in its state the complete chain with full blocks, that include all of their transactions. In addition, the chain is assumed to be verified for validity.
@@ -23,7 +23,7 @@ A full node contains in its state the complete chain with full blocks, that incl
 When presented with a public key, the full node wallet starts evaluating all transactions in every block from genesis up to the tip to detect which ones implicate the user's public key. This process is linear in the chain size, thus $\Theta(n)$.
 
 \paragraph{Reduced functionality mode.}
-A full node needs to hold at all times the state at the blockchain tip in order to be able to verify potential new blocks extending the tip. For UTXO-based cryptocurrencies this state is exactly the UTXO. When presented with a public key, the wallet instead of looking through all transactions in history to obtain the full user's history can locate all currently unspent outputs directed to the user by looking through the UTXO set. In this way the user's balance can be directly obtaine as the sum of such outputs. However, the transaction history is not known but new transactions can be generated without a problem.
+A full node needs to hold at all times the state at the blockchain tip in order to be able to verify potential new blocks extending the tip. For UTXO-based cryptocurrencies this state is exactly the UTXO. When presented with a public key, the wallet instead of looking through all transactions in history to obtain the full user's history can locate all currently unspent outputs directed to the user by looking through the UTXO set. In this way the user's balance can be directly obtained as the sum of such outputs. However, the transaction history is not known but new transactions can be generated without a problem.
 
 If the UTXO is stored as a list, performance is linear in its size. However, the UTXO can easily be indexed by address, which makes detection $\Theta(1)$.
 
