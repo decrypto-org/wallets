@@ -128,11 +128,13 @@ A \emph{full node} maintains the full block chain, along with every transaction.
 A \emph{miner} is a full node that also attempts to mine a new block on top of the best block chain. If a block is successfully mined, it is broadcasted to the P2P network of full nodes for them to consider adopting it.
 
 \subsection{Simple Payment Verification}
-Simple Payment Verification first appeared in the Bitcoin whitepaper~\cite{bitcoin} as a wait for nodes to figure out their transactions without the need to download and store full blocks. An SPV client works by obtaining the header-chain from other full nodes and validating it. Upon doing that, it can verify any transaction is included in one of the blocks by verifying a Merkle inclusion proof against a Merkle root in one of the headers. We will now formally define an SPV client.
+Simple Payment Verification (SPV) first appeared in the Bitcoin whitepaper~\cite{bitcoin} as a wait for nodes to figure out their transactions without the need to download and store full blocks. An SPV client works by obtaining the header-chain from other full nodes and validating it. Upon doing that, it can verify any transaction is included in one of the blocks by verifying a Merkle inclusion proof against a Merkle root in one of the headers. We will now formally define an SPV client.
 
 \begin{definition}[SPV client]
 An \emph{SPV client} is an ITM that knows a genesis block \textsf{Gen} and connects to a set of full nodes $\mathcal{P}$, at least one of which is honest. It may only request block headers at a range of heights. It obtains all header-chains $\chain_1, \dots, \chain_{|\mathcal{P}|}$, keeping only those for which the chain structure holds ($\forall 1 < i \le |\chain|: H(\chain[i-1]) = \chain[i].previd$). It subsequently compares them and adopts the chain with the most difficulty.
 \end{definition}
+
+The assumption of at least one honest full node is necessary to avoid eclipse attacks~\cite{eclipse,eclipse-ethereum}.
 
 We state some theorems pertaining to the adopted chain of an SPV client which appear previously in~\cite{sok} and are more formally derivable from the works of~\cite{backbone,garay2017bitcoin,pass2017analysis}.
 
