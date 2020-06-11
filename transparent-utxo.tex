@@ -17,18 +17,19 @@ The balance of a wallet can be obtained as the sum of the values of all unspent 
 The transaction history of a wallet can be extracted from the set of all transactions implicating public keys derivable from the seed. Specifically, inputs where are spent by some private key derivable from the seed are debits, and outputs which are directed to some public key derivable from the seed are credits.
 
 \subsection{Full Node}
-%Full node wallets plug directly to a full node. The full node 
-The best known example of a full node wallet is Bitcoin-Qt.
-
 A full node contains in its state the complete chain with full blocks, that include all of their transactions. In addition, the chain is assumed to be verified for validity.
 
-\paragraph{Transaction history \& Spending.}
-When presented with a seed, the full node wallet starts evaluating all transactions in every block from genesis up to the tip to detect which ones implicate the user's seed. This process is linear in the chain size, henceforth $O(n)$.
+\paragraph{Full construction.}
+When presented with a public key, the full node wallet starts evaluating all transactions in every block from genesis up to the tip to detect which ones implicate the user's public key. This process is linear in the chain size, thus $\Theta(n)$.
 
-\paragraph{Only Balance \& Spending (Pruned mode).}
-When presented with a seed in pruned mode, a full node wallet can only evaluate all outputs in the UTXO to detect the user's current spendable balance. In this way, the transaction history is not known but new transactions can be generated without a problem. One shortcoming of this approach is the additional assumption that we know the maximum nonce in use with the user's seed. We must assume a maximum nonce in order to generate a list of possible addresses of the user and scan the UTXO for outputs directed to them.
+\paragraph{Reduced functionality mode.}
+A full node needs to hold at all times the state at the blockchain tip in order to be able to verify potential new blocks extending the tip. For UTXO-based cryptocurrencies this state is exactly the UTXO. When presented with a public key, the wallet instead of looking through all transactions in history to obtain the full user's history can locate all currently unspent outputs directed to the user by looking through the UTXO set. In this way the user's balance can be directly obtaine as the sum of such outputs. However, the transaction history is not known but new transactions can be generated without a problem.
 
-If the UTXO is stored as a list, then every entry must be checked, which yields performance of $O(|utxo|)$. However, the UTXO can easily be indexed by address, which makes detection $O(maxnonce)$.
+If the UTXO is stored as a list, performance is linear in its size. However, the UTXO can easily be indexed by address, which makes detection $\Theta(1)$.
+
+\paragraph{In practice.}
+Cryptocurrencies are defined by their full nodes so the implementation already exists, so they are the easiest to build a wallet on top of. Usually the wallet is included in the bundle of software that the full node ships with. This is the case with Bitcoin~\cite{bitcoin}, Litecoin~\cite{litecoin}, Dogecoin~\cite{dogecoin}, Ergo~\cite{ergo}, and many other cryptocurrencies.
+
 \subsection{BIP-37 SPV}
 SPV was first described in the Bitcoin whitepaper~\cite{bitcoin}.
 The idea is as follows, a light node only requests and holds the header chain, that is only the header part of each block (which in Bitcoin is 80 bytes) and not the full block. When someone wishes to prove a transaction took place to an SPV node, they need to provide (a) the transaction (b) the id of the block that contains it and (c) a Merkle proof of inclusion to the Merkle root included in said block. The SPV node can check that the claimed block is part of its local best header chain and the Merkle proof provided is valid against the block's Merkle root.
