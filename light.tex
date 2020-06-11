@@ -1,21 +1,32 @@
-\section{Light Wallets}
-\label{light}
-\begin{definition}[Light wallet]
-A wallet is called \emph{light} if it can be usable in all 3 aspects (transaction description funding, balance and transaction history) by having a communication complexity of $o(n)$ (assuming a constant number of relevant transactions).
-\end{definition}
+\section{Superlight Wallets}
+\label{superlight}
+We have seen that SPV allows clients to verify the best chain by only downloading all block headers while maintaining security. A body of research, starting with~\cite{highway,friedenbach}, tried to identify ways of adopting the best chain by downloading less than all block headers. We introduce the notion of a superlight client to more formally capture such solutions. 
 
-\begin{definition}[Light client]
-A \emph{light client} is an ITM that after communicating with a set of parties $P$ of which at least one is honest, can determine by using $o(n)$ of communication:
+\begin{definition}[Superlight client]
+A \emph{superlight client} is an ITM that after communicating with a set of parties $P$ of which at least one is honest, can determine by using $o(n)$ of communication:
 \begin{enumerate}
     \item The tip of the honest chain.
     \item The inclusion of some block in the honest chain.
 \end{enumerate}
 \end{definition}
 
-A parallel must be drawn to the verifier in~\cite{nipopows}. The verifier is non-interactive whereas we also allow interactive protocols for a light client. In NIPoPoWs a proof for the tip of the chain is called a suffix proof and a proof for the inclusion of some block in a chain is called an infix proof. A final difference is that in NIPoPoWs the proof size is fixed as $O(polylog(n))$ whereas our definition is more general, allowing any sublinear proof size.
+Non-Interactive Proofs of Proof-of-Work~\cite{kls,nipopows,flyclient} (NIPoPoWs) were introduced that solve this problem, requiring clients to download only $\Theta(\polylog{n})$ block headers while maintaining security---an exponential improvement.
+
+For our superlight client definition a parallel can drawn to the verifier in~\cite{nipopows}. The verifier is non-interactive whereas we also allow interactive protocols for a superlight client. In NIPoPoWs a proof for the tip of the chain is called a suffix proof and a proof for the inclusion of some block in a chain is called an infix proof. A final difference is that in NIPoPoWs the proof size is fixed as $O(polylog(n))$ whereas our definition is more general, allowing any sublinear proof size.
+
+The leading directions for NIPoPoWs are the following.
+Superblock NIPoPoWs~\cite{nipopows,compactsuperblocks} are based on \emph{superblocks}, blocks which have achieved much more proof-of-work than their nominal target. FlyClient NIPoPoWs~\cite{flyclient} rely on random sampling of blocks.
+
+A lot of attention has been given to superlight clients as a means to implement 1-way~\cite{burn} and 2-way pegs~\cite{pow-sidechains}---ways to trustlessly transfer funds from one cryptocurrency to another.
+
+Little attention has been paid until now to wallet constructions that make use of superlight clients. To this end we provide a first definition for wallets which are also superlight.
+
+\begin{definition}[Superlight wallet]
+A wallet is called \emph{superlight} if it can be usable in all 3 aspects (transaction description funding, balance and transaction history) by having a communication complexity of $o(n)$ (assuming a constant number of relevant transactions).
+\end{definition}
 
 \subsection{An ideal construction}
-\label{light-ideal}
+\label{superlight-ideal}
 Suppose a hypothetical cryptocurrency where we can specify the format of the block header.
 
 \begin{enumerate}
@@ -25,32 +36,33 @@ Suppose a hypothetical cryptocurrency where we can specify the format of the blo
 
 For the commitment any key-value commitment structure can be used such as Sparse Merkle Trees~\cite{sparse-mt,revocation-transparency} or Merkle Patricia Tries which are already used for header commitments in Ethereum~\cite{wood2014ethereum}. We require that the commitments are verified as part of the consensus protocol and that a block is rejected by honest full nodes if its block header commitment is bogus.
 
-A light wallet can work as follows. It first fires up a light client according to some light client protocol and requests the blockchain tip. It then extracts the commitment from the block header. It subsequently queries a helpful node for the value of the map for an address of interest along with a proof that the value actually belongs to the committed map. Finally it verifies the proof and if successful can use this information to operate.
+A superlight wallet can work as follows. It first fires up a superlight client according to some superlight client protocol and requests the blockchain tip. It then extracts the commitment from the block header. It subsequently queries a helpful node for the value of the map for an address of interest along with a proof that the value actually belongs to the committed map. Finally it verifies the proof and if successful can use this information to operate.
 
 \paragraph{Performance.} This construction succeeds in syncing by only downloading $o(n)$ block headers and $\Theta(y)$ transactions and proofs.
 \begin{theorem}[Security]
-The ideal light wallet construction is secure with regards to a secure light client protocol.
+The ideal superlight wallet construction is secure with regards to a secure superlight client protocol.
 \end{theorem}
 \begin{proof}[Proof Sketch]
 If the tip is chosen to $k$-buried then it belongs to the honest chain except with negligible probability in the security parameter. Thus the commitments obtained are valid, as honest nodes reject blocks with invalid header commitments. Finally the data obtained from the helpful node for the key of interest need to be consistent with the commitment due to the security of the authenticated map protocol.
 \end{proof}
 
 \begin{theorem}[Uncensorability]
-\label{light-uncensorability}
-An adversarial server cannot hide transactions from the light wallet.
+\label{superlight-uncensorability}
+An adversarial server cannot hide transactions from the superlight wallet.
 \end{theorem}
 \begin{proof}
-Assume an adversarial server that succeeds in hiding transactions from the light wallet. This means they produced for some $y$, map $M$ and key $k$ where $y \neq M[k]$ a proof $\pi$ such that $\textsf{Ver}_\textsf{auth-map}(\textsf{Commit}_\textsf{auth-map}(M), \pi, k, y) = \textsf{true}$, which directly conflicts with the security of the authenticatd map protocol.
+Assume an adversarial server that succeeds in hiding transactions from the superlight wallet. This means they produced for some $y$, map $M$ and key $k$ where $y \neq M[k]$ a proof $\pi$ such that $\textsf{Ver}_\textsf{auth-map}(\textsf{Commit}_\textsf{auth-map}(M), \pi, k, y) = \textsf{true}$, which directly conflicts with the security of the authenticatd map protocol.
 \end{proof}
 
 \paragraph{Deployment paths.}
-Although such helpful commitments have been proposed to aid in building light and secure wallets since as early as 2012~\cite{ultimate}, such commitments do not exist in either Bitcoin or Ethereum today. We remark that such commitments could be incorporated as a non-contentious soft-fork.
+Although such helpful commitments have been proposed to aid in building superlight and secure wallets since as early as 2012~\cite{ultimate}, such commitments do not exist in either Bitcoin or Ethereum today. We remark that such commitments could be incorporated as a non-contentious soft-fork.
 
 \subsection{Private cryptocurrencies}
-\label{light-private}
-We now turn our attention to building light clients for private cryptocurrencies. ZCash recently announced the upcoming Heartwood hard-fork that will include FlyClient support~\cite{zcash-heartwood-news} by means of adding a Merkle Mountain Range commitment to its block headers~\cite{zcash-flyclient-zip}. The addition is warranted as, according to the company in~\cite{zcash-heartwood-news} ``Flyclient enables interoperability efforts, cross-chain integration and light-client use cases''.
+\label{superlight-private}
+%TODO: promote the discoverability problem to the private section and shorten this
+We now turn our attention to building superlight clients for private cryptocurrencies. ZCash recently announced the upcoming Heartwood hard-fork that will include FlyClient support~\cite{zcash-heartwood-news} by means of adding a Merkle Mountain Range commitment to its block headers~\cite{zcash-flyclient-zip}. The addition is warranted as, according to the company in~\cite{zcash-heartwood-news} ``Flyclient enables interoperability efforts, cross-chain integration and superlight-client use cases''.
 
-It is interesting to note however that even though light clients are a welcome improvement, no straightforward light wallet solution has been proposed for a light client of a private cryptocurrency. For a potential solution, there exist two possible paths.
+It is interesting to note however that even though superlight clients are a welcome improvement, no straightforward light wallet solution has been proposed for a light client of a private cryptocurrency. For a potential solution, there exist two possible paths.
 
 \begin{enumerate}
     \item \textbf{Revealing the private viewing key.} The light wallet may work by sharing its private viewing key with a server. The server then needs to detect relevant transactions for the user. Unfortunately detecting transactions requires time linear to the number of transactions in the network. Each transaction is returned to the wallet, accompanied with a proof of inclusion in the wallet's adopted chain. The proof of inclusion of a transaction is comprised of:
