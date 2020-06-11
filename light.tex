@@ -12,7 +12,7 @@ A \emph{superlight client} is an ITM that after communicating with a set of part
 
 Non-Interactive Proofs of Proof-of-Work~\cite{kls,nipopows,flyclient} (NIPoPoWs) were introduced that solve this problem, requiring clients to download only $\Theta(\polylog{n})$ block headers while maintaining security---an exponential improvement.
 
-For our superlight client definition a parallel can drawn to the verifier in~\cite{nipopows}. The verifier is non-interactive whereas we also allow interactive protocols for a superlight client. In NIPoPoWs a proof for the tip of the chain is called a suffix proof and a proof for the inclusion of some block in a chain is called an infix proof. A final difference is that in NIPoPoWs the proof size is fixed as $O(polylog(n))$ whereas our definition is more general, allowing any sublinear proof size.
+For our superlight client definition a parallel can drawn to the verifier in~\cite{nipopows}. The verifier is non-interactive whereas we also allow interactive protocols for a superlight client. In NIPoPoWs a proof for the tip of the chain is called a suffix proof and a proof for the inclusion of some block in a chain is called an infix proof. A final difference is that in NIPoPoWs the proof size is fixed as $O(\polylog{n})$ whereas our definition is more general, allowing any sublinear proof size.
 
 The leading directions for NIPoPoWs are the following.
 Superblock NIPoPoWs~\cite{nipopows,compactsuperblocks} are based on \emph{superblocks}, blocks which have achieved much more proof-of-work than their nominal target. FlyClient NIPoPoWs~\cite{flyclient} rely on random sampling of blocks.
