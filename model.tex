@@ -18,8 +18,11 @@ The user may wish to create a new transaction. They specify a \emph{transaction 
 \paragraph{History.}
 We model the transaction history as a function extracting it from the wallet state, namely $tx_1, \dots, tx_y \gets \text{History}(pk, \textsf{wstate})$.
 
+\paragraph{Balance.}
+The wallet provides a function to determine the balance of the user based on the wallet state as $\textsf{balance} \gets \text{Balance}(pk, \textsf{wstate})$.
+
 \begin{definition}[Wallet Protocol]
-A \emph{wallet protocol} $\pi_\text{wallet}$ with respect to some server protocol $\pi_\text{wallet-server}$ that each server $s \in \mathcal{S}$ implements and a blockchain rooted in $\Gen$ is defined as a tuple of functions $\tpl{\text{Sync}_{\Gen, \mathcal{S}}, \text{Fund}, \text{History}}$.
+A \emph{wallet protocol} $\pi_\text{wallet}$ with respect to some server protocol $\pi_\text{wallet-server}$ that each server $s \in \mathcal{S}$ implements and a blockchain rooted in $\Gen$ is defined as a tuple of functions $\tpl{\text{Sync}_{\Gen, \mathcal{S}}, \text{Fund}, \text{History}, \text{Balance}}$.
 \end{definition}
 
 \paragraph{Seeds.}
