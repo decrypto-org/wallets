@@ -134,7 +134,7 @@ SPV wallets reveal a lot of information to the servers, even though the addresse
 
 In Electrum, and explorer-based wallets addresses are directly provided to the servers for efficiency.
 
-For Neutrino, addresses are not leaked directly, however full blocks are only received when they contain transactions of interest which could yield some information about the identity of the client to an adversary. Due to SPV security other attacks are impossible.
+For Neutrino, addresses are not leaked directly, however full blocks are only received when they contain transactions of interest which could yield some information about the identity of the client to an adversary. In~\cite{bip157} the mitigation proposed is that full blocks be queried from servers at random. However in the face of a Sybil attack~\cite{sybil} the same loss of privacy ensues.
 
 In MyMonero and our light client solution for private cryptocurrencies the private viewing key is directly provided to the server, leading to complete privacy loss.
 
