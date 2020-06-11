@@ -1,6 +1,6 @@
 \section{Privacy Wallets}
 \label{privacy}
-In this section we will discuss wallets for ZCash, one of the most prominent private cryptocurrencies.
+In this section we will discuss wallets for ZCash~\cite{zcash,zcash-spec} and Monero~\cite{monero}, two of the most prominent private cryptocurrencies. ZCash is based on the Zerocoin protocol~\cite{zerocoin} which is in the UTXO model. Monero is based on the Cryptonote~\cite{cryptonote} protocol, also in the UTXO model~\cite{zero-to-monero}. To our knowlege no private cryptocurrencies exist in practice with wallets, so naturally this section will only focus on wallets for private cryptocurrencies in the UTXO model.
 
 We first examine the requirements for a ZCash wallet to be functional. To create a new transaction sending funds to some party, the wallet needs to know the unspent outputs belonging to the user. From these outputs the amount and some auxillary values must be discovered, in order to allow the wallet to create a nullifier for the commitment and spend it. In order to create a valid transaction with a valid Zero Knowledge proof the wallet also needs to know the full contents of the commitment tree, to prove that they are spending a commitment included in that tree.
 
@@ -17,7 +17,7 @@ SPV nodes for private cryptocurrencies don't exist in practice due to the detect
 A hypothetical SPV wallet however, could avoid performing verification of the chain contents (the transactions) and only perform verification of the header-chain. While this does not reduce the bandwidth requirements of an SPV wallet, it could significantly reduce the computation time for syncing. This is especially important in the case of ZCash where verifying the validity of a zero-knowledge proof of a transaction may take time in the order of milliseconds.
 
 \paragraph{Compact Blocks.}
-In ZIP-307 an optimization for bandwidth is proposed. The optimization lies in noticing that since under the assumption of SPV security transactions don't need to be verified, transactions only need to hold the minimum amount of data such that they are detectable. By only keeping this data, transactions are compressed. Block headers remain unchanged. The new block structure including these compressed transactions is dubbed a compact block.
+In ZIP-307 an optimization for bandwidth is proposed~\cite{compact-blocks}. The optimization lies in noticing that since under the assumption of SPV security transactions don't need to be verified, transactions only need to hold the minimum amount of data such that they are detectable. By only keeping this data, transactions are compressed. Block headers remain unchanged. The new block structure including these compressed transactions is dubbed a compact block.
 
 This is a backwards-compatible change to the ZCash network that does not require any consensus changes. Blocks are adapted to this compact block format by any interested server and are subsequently relayed to any clients that request them.
 
@@ -27,9 +27,13 @@ If a client detects an inbound or outgoing payment of interest, it can then requ
 This compression of the transactions is lossy and means that the transactions inclusion in the claimed block header can't be verified via a Merkle proof in the same way it can be verified on transparent SPV. This is because the hash of the original transaction cannot be reproduced unless the full transaction is owned, which defeats the purpose. However, a similar verification can be performed as follows. Every shielded output references a new commitment. ZCash in its block header includes a Merkle Tree root of the existing commitment set after adding all commitments the transactions of the block itself create. Thus even though transactions themselves cannot be verified as valid, shielded outputs can by verifying a Merkle inclusion proof of inclusion of the commitment in the Merkle Tree root of commitments. For the inputs no processing needs to be done. If an input reveals a note belonging to the user then this note can be marked as spent as the only person who would be able to reveal the note is the user itself and it can't be faked by any server. If an input reveals a note belonging to someone else the server has nothing to gain by tricking the wallet into thinking it is revealed in a block where it is not. Cases of double-spending by an adversarial server are completely thwarted by the output verification.
 
 We remark that this is not an asymptotic improvement over the theoretical SPV solution. We posit that an asymptotic improvement over the theoretical SPV solution which preserves privacy (i.e. no private keys are revealed to the remote peer) cannot exist.
+
+\paragraph{In practice.}
+ZecWallet Lite~\cite{zecwallet} is a desktop wallet with a mobile companion app that utilizes the Compact Blocks proposal. On the backend it uses lightwalletd~\cite{lightwalletd}, which offers transforms full blocks to the compact format.
+
 \subsection{MyMonero}
 \label{mymonero}
-A final solution for private cryptocurrencies observed in practice comes from Monero. MyMonero is a desktop and mobile wallet that operates with the help of a trusted server. The viewing private key is disclosed to the server so that it can detect transactions on the wallet's behalf. Any detected transactions are relayed to the wallet in order for the wallet to display and for the wallet to hold an up-to-date UTXO for the purposes of creating new transactions.
+A final solution for private cryptocurrencies observed in practice comes from Monero. MyMonero~\cite{mymonero} is a desktop and mobile wallet that operates with the help of a trusted server. The viewing private key is disclosed to the server so that it can detect transactions on the wallet's behalf. Any detected transactions are relayed to the wallet in order for the wallet to display and for the wallet to hold an up-to-date UTXO for the purposes of creating new transactions.
 
 MyMonero works differently when the user creates a new seed and when the user recovers their wallet with an existing seed. When creating a new seed, the viewing private key is disclosed but because the server knows the key was just generated they can be certain that it has never received any transactions.
 

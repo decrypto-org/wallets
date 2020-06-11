@@ -40,7 +40,7 @@ Using this functionality of an SPV node as a building block, we examine how an S
 %TODO: talk about incrementing the nonce
 %TODO: talk about server-side bloom filter alteration
 
-A well known implementation of BIP-37 SPV is included in the bitcoinj library~\cite{bitcoinj}, which is a full Bitcoin implementation in Java. Andreas Schildbach's famous Android Bitcoin wallet~\cite{schildbach} is based on that library, as well as decentralized exchange Bisq~\cite{bisq}. Other applications that implement BIP-37 SPV wallets include BRD~\cite{brd} and OpenBazaar~\cite{openbazaar}.
+\paragraph{In practice.} A well known implementation of BIP-37 SPV is included in the bitcoinj library~\cite{bitcoinj}, which is a full Bitcoin implementation in Java. Andreas Schildbach's famous Android Bitcoin wallet~\cite{schildbach} is based on that library, as well as decentralized exchange Bisq~\cite{bisq}. Other applications that implement BIP-37 SPV wallets include BRD~\cite{brd} and OpenBazaar~\cite{openbazaar}.
 
 Note that the protocol may seem wasteful, especially in case the header chain is already synced as it forces us to re-download the whole header chain. Additionally, it may seem wasteful that the peer needs to process every single transaction in history in order to service the peer. It has been shown that not only is it wasteful but can be an exploitable Denial-of-Service vector~\cite{todd-bip37-attack}. This lead to the reference implementation of Bitcoin, Bitcoin Core, to disable BIP-37 server functionality by default on full nodes~\cite{bip37-disable}. These inefficiencies are mitigated in the next protocol we are going to discuss.
 
@@ -48,7 +48,7 @@ Note that the protocol may seem wasteful, especially in case the header chain is
 
 \subsection{Electrum}
 %TODO: checkpoints
-Electrum is probably the most well-known wallet for Bitcoin.
+Electrum~\cite{electrum} was the first alternative and so-called ``light'' wallet for Bitcoin after the reference implementation.
 The protocol it utilizes is as follows. First, the wallet connects to 10 peers chosen from a hardcoded list in the software. One of them is selected as primary at random. The peers speak a protocol specified by Electrum and originally proposed in~\cite{stratum} and not the full node protocol.
 In Electrum, servers hold an address index over all historical transactions. In early versions~\cite{electrumserver} of the server the index was arranged in a Merkle Patricia Trie~\cite{ultimate}. The most widely used server implementation~\cite{electrumserverrust} does not arranging the index in this way and simply relies on an underlying key-value store.
 
@@ -103,11 +103,10 @@ the peer can be almost certain which transactions belong to the same entity, bre
 
 However these improvements come at the cost of bandwidth. For each block its corresponding filter must be downloaded to detect relevant transactions in that block. The filter size for a 1.4MB block is approximately 20KB~\cite{jimmysong}. This is a significant overhead compared to SPV, where no such filter needs to be downloaded.
 
-Neutrino is currently implemented in the bchd full node~\cite{bchd}, giving an easy option to any bchd full node to act as a Neutrino server if they so desire.
-
-The homonymous Neutrino wallet for Android is the only known client implementation.
+\paragraph{In practice.}
+Neutrino is currently implemented in the bchd full node~\cite{bchd}, giving an easy option to any bchd full node to act as a Neutrino server if they so desire. The homonymous Neutrino wallet~\cite{neutrino-wallet} for Android works for Bitcoin Cash and uses the filter-chain variant of the Neutrino protocol. The Lightning wallet~\cite{lightning-wallet} makes use of their Lightning Lab's inhouse Neutrino library~\cite{neutrino-library} that implements the filter-chain variant of the Neutrino protocol.
 
 \subsection{Yoroi}
-Yoroi is Cardano's most widely used wallet. It does not connect to full nodes or peers that relay block headers, only to a blockchain explorer. It requests the user's transactions from the explorer, but does not verify that the transactions are all included in blocks in the best chain. From them the wallet determines the UTXO set and can thus fund transaction descriptions, compute the balance and show the transaction history. Since no transaction verification is taking place, the explorer is a trusted third party.
+Yoroi~\cite{yoroi} is Cardano's most widely used wallet. It does not connect to full nodes or peers that relay block headers, only to a blockchain explorer. It requests the user's transactions from the explorer, but does not verify that the transactions are all included in blocks in the best chain. From them the wallet determines the UTXO set and can thus fund transaction descriptions, compute the balance and show the transaction history. Since no transaction verification is taking place, the explorer is a trusted third party.
 
-Most wallets that have seen wide use follow Yoroi's model, including Exodus. Additionally, the apps that utilize hardware wallets like Ledger and Trezor work in this manner.
+Most wallets that have seen wide use follow Yoroi's model, including Exodus~\cite{exodus}. Additionally, the apps that utilize hardware wallets like Ledger~\cite{ledger-live} and Trezor~\cite{trezor-beta} work in this manner.
