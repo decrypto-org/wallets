@@ -6,15 +6,15 @@ A transaction description specifies the desired outputs of a transaction and a f
 A wallet needs to be able to turn a transaction description into a valid transaction that will be accepted by full nodes in a process called funding. To fund a transaction description, the wallet performs the following steps:
 
 \begin{itemize}
-    \item Collect a set $S$ of unspent transaction outputs spendable by public keys derivable from the seed such that $$\sum_{o \in S} o.\text{value} \ge \textsf{value}$$
-    \item Create a change output directed back to a public key derivable by the seed such that
+    \item Collect a set $S$ of unspent transaction outputs spendable by the public key such that $$\sum_{o \in S} o.\text{value} \ge \textsf{value}$$
+    \item Create a change output directed back to the public key\footnote{A new public key is normally generated through the seed, but we study a simplified model here.} such that
     $$\sum_{input} input.\text{value} - \sum_{output} output.\text{value} = \textsf{fee}$$
     \item For each unspent transaction output in $S$, generate its unlocking script and use it as an input. In the typical case the unlocking script includes the signature of said transaction with the secret key of said output recipient.
 \end{itemize}
 
-The balance of a wallet can be obtained as the sum of the values of all unspent outputs destined to public keys derivable from the seed.
+The balance of a wallet can be obtained as the sum of the values of all unspent outputs destined to public key.
 
-The transaction history of a wallet can be extracted from the set of all transactions implicating public keys derivable from the seed. Specifically, inputs where are spent by some private key derivable from the seed are debits, and outputs which are directed to some public key derivable from the seed are credits.
+The transaction history of a wallet can be extracted from the set of all transactions implicating the public key. Specifically, inputs where are spent by the secret key are debits, and outputs which are directed to the public key are credits.
 
 \subsection{Full Node}
 A full node contains in its state the complete chain with full blocks, that include all of their transactions. In addition, the chain is assumed to be verified for validity.
