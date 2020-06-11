@@ -25,8 +25,8 @@ Client computation &
 \rot{Uncensorability}
 \\ \hline
 \textbf{Proposal}&
-\textbf{Model}&
-\textbf{Transparency}&
+\textbf{TX Model}&
+\textbf{Kind}&
 \multicolumn{3}{c|}{\textbf{Performance $\Theta(\cdot)$}}&
 \multicolumn{5}{c}{\textbf{Security}} \\
 \hline
@@ -38,12 +38,12 @@ Neutrino &UTXO&Transparent&$n+y\alpha$&$n+y\alpha$&$1$  &\full&\half&\full&\full
 Yoroi    &UTXO&Transparent&$y$  &$1$  &$1$  &     &     &     &     &     \\
 Full Node&Account&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
 Metamask &Account&Transparent&$y$  &$1$  &$1$  &     &     &     &     &     \\
-Electrum-like* &Account&Transparent&$n+y\lg{\alpha}$  &$n+y\lg{\alpha}$  &$1$  &     &     &\full&\full&\full\\
-Full Node&UTXO&Privacy&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
-SPV      &UTXO&Privacy&$n+m$&$n+m$&$1$&\full&\full&\full&\full&\full\\
-MyMonero &UTXO&Privacy&$y$&$1$&$m$&     &     &     &     &     \\
+Electrum-like (this work)&Account&Transparent&$n+y\lg{\alpha}$  &$n+y\lg{\alpha}$  &$1$  &     &     &\full&\full&\full\\
+Full Node&UTXO&Private&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
+SPV      &UTXO&Private&$n+m$&$n+m$&$1$&\full&\full&\full&\full&\full\\
+MyMonero &UTXO&Private&$y$&$1$&$m$&     &     &     &     &     \\
 Superlight (this work)&Both&Transparent&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$1$&\full&     &\full&\full&\full\\
-Superlight (this work)&UTXO&Privacy&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$m$&\full&     &\full&\full&     \\
+Superlight (this work)&UTXO&Private&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$m$&\full&     &\full&\full&     \\
 \hline
 \end{tabular}
 \end{table*}
