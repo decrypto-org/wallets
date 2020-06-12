@@ -27,12 +27,7 @@ A wallet is called \emph{superlight} if it can be usable in all 3 aspects (trans
 
 \subsection{An ideal construction}
 \label{superlight-ideal}
-Suppose a hypothetical cryptocurrency where we can specify the format of the block header.
-
-\begin{enumerate}
-    \item For UTXO we include a commitment to a map of the form $address \rightarrow [tx_1, \dots, tx_k]$.
-    \item For accounts we include a commitment to a map of the form $address \rightarrow \tpl{balance, nonce, [tx_1, \dots, tx_k]}$.
-\end{enumerate}
+Suppose a hypothetical cryptocurrency where we can specify the format of the block header. We include a commitment to a map of the form $address \rightarrow [tx_1, \dots, tx_k]$.
 
 For the commitment any key-value commitment structure can be used such as Sparse Merkle Trees~\cite{sparse-mt,revocation-transparency} or Merkle Patricia Tries which are already used for header commitments in Ethereum~\cite{wood2014ethereum}. We require that the commitments are verified as part of the consensus protocol and that a block is rejected by honest full nodes if its block header commitment is bogus.
 
