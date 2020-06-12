@@ -42,3 +42,10 @@ It is very easy to conceive how an SPV wallet for Electrum would work without hi
     \item Ask for the value of the address of the user in the state trie at the tip, along with a proof for the value.
     \item Verify the that the value is indeed committed in the root found at the tip block header and extract the balance and nonce from it.
 \end{enumerate}
+
+\subsection{Electrum-like}
+We propose a solution based on Electrum for account-based cryptocurrencies. We augment the wallet server protocol that we demonstrated in~\cref{utxo-electrum} for accounts with one more function which we call \texttt{get\_state}. $\texttt{get\_state}(pk, h)$ takes a public key $pk$ and a block height $h$ and returns the state $\tpl{\bal, \nonce}$\footnote{For simplification we only mind the state for Externally Owned Accounts and we completely disregard smart contracts in our accounts model.}, along with an authenticated map proof against the state trie found in the block header at height $h$.
+
+The operation of the wallet proceeds as follows. The wallet first completes a headers-based synchronisation obtaining the honestly adopted chain. Servers which did not provide the honestly adopted chain are disregarded for the next steps. It then picks a server at random and asks for all transactions using \texttt{get\_history}. After verifying all the Merkle proofs for all transactions, it requests the state and a proof for the chain tip by invoking $\texttt{get\_state}(pk, |\chain|-1)$. It verifies this proof against the block header of its local chain tip.
+
+It then is able to reconcile the history obtained with the confirmed state of $pk$ in order to ensure that no transactions have been omitted. First, the number of debits should be equal to the $\nonce$ found in the state, and secondly the $\bal$ should be equal to the sum of all credits minus the sum of all debits and their corresponding transaction fees. If any of these checks fail, the server lied about the history and another server is chosen for the process to repeat, until a server finally says the truth. By our standard assumption of at least one honest server this is bound to happen.

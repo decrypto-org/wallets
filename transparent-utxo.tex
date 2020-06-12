@@ -62,6 +62,7 @@ Note that the protocol may seem wasteful, especially in case the header chain is
 %TODO: talk about how the server can withhold transactions
 
 \subsection{Electrum}
+\label{utxo-electrum}
 %TODO: checkpoints
 Electrum~\cite{electrum} was the first alternative and so-called ``light'' wallet for Bitcoin after the reference implementation.
 The protocol it utilizes is as follows. First, the wallet connects to 10 servers chosen from a hardcoded list in the software. One of them is selected as primary at random. The servers speak an Electrum-specific protocol called Stratum which follows the design originally proposed in~\cite{stratum} and not the full node protocol.
