@@ -34,7 +34,7 @@ Full Node&UTXO&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full\\
 SPV      &UTXO&Transparent&$n+y\lg{\alpha}$&$n+y\lg{\alpha}$&$m$&\full&\half&\full&     \\
 Electrum &UTXO&Transparent&$n+y\lg{\alpha}$&$n+y\lg{\alpha}$&$1$&     &     &\full&     \\
 Neutrino &UTXO&Transparent&$n+y\alpha$&$n+y\alpha$&$1$  &\full&\half&\full&\full\\
-Yoroi    &UTXO&Transparent&$y$  &$1$  &$1$  &     &     &     &     \\
+Explorer-based    &UTXO&Transparent&$y$  &$1$  &$1$  &     &     &     &     \\
 Full Node&Account&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full\\
 Metamask &Account&Transparent&$y$  &$1$  &$1$  &     &     &     &     \\
 Electrum-like (this work)&Account&Transparent&$n+y\lg{\alpha}+\lg{m}$  &$n+y\lg{\alpha}+\lg{m}$  &$1$  &     &     &\full&\full\\
@@ -87,7 +87,7 @@ Electrum-based implementations for UTXO have the same communication complexity. 
 
 Our Electrum based construction for accounts requires $n+y\lg{a}+\lg{m}$ communication, with the $\lg{m}$ representating the state trie proof size. We assume that the state trie grows as $\Theta(m)$.
 
-Yoroi, Metamask and MyMonero are all querying a trusted-third party and obtain the relevant transactions directly, thus have a communication complexity of $y$.
+Explorer-based wallets and MyMonero are all querying a trusted-third party and obtain the relevant transactions directly, thus have a communication complexity of $y$.
 
 SPV wallets for private cryptocurrencies that do not reveal the private viewing key to a server require that all full blocks be downloaded, resulting in $n+m$ communication complexity.
 
