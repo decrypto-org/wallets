@@ -124,4 +124,4 @@ Neutrino is currently implemented in the bchd full node~\cite{bchd}, giving an e
 \subsection{Yoroi}
 Yoroi~\cite{yoroi} is Cardano's most widely used wallet. It does not connect to full nodes or peers that relay block headers, only to a blockchain explorer. It requests the user's transactions from the explorer, but does not verify that the transactions are all included in blocks in the best chain. From them the wallet determines the UTXO set and can thus fund transaction descriptions, compute the balance and show the transaction history. Since no transaction verification is taking place, the explorer is a trusted third party.
 
-Most wallets that have seen wide use follow Yoroi's model, including Exodus~\cite{exodus}. Additionally, the apps that utilize hardware wallets like Ledger~\cite{ledger-live} and Trezor~\cite{trezor-beta} work in this manner.
+Most wallets that have seen wide use follow Yoroi's model, including Exodus~\cite{exodus}, Coinbarn~\cite{coinbarn}. Additionally, the apps that utilize hardware wallets like Ledger~\cite{ledger-live} and Trezor~\cite{trezor-beta} work in this manner.
