@@ -130,7 +130,7 @@ A full node has the best privacy as everything is downloaded thus no network pee
 
 SPV wallets reveal a lot of information to the servers, even though the addresses are not directly revealed as shown in~\cite{gervais2014privacy}.
 
-% TODO: SPV IN PRIVATE CRYPTOS NOT PRIVATE
+For private cryptocurrencies, SPV wallets that download full blocks but don't verify the transaction validity while relying on SPV security are fully private. However solutions like compact blocks which provide a constant factor optimization need to be treated carefully. The reason is that after the wallet detects the compressed transactions that are relevant to its secret key, it may request to get the full transactions for some reason (for example to examine the transaction's memo field in Zcash). This would lead to privacy loss. To mitigate this the suggestion in~\cite{compact-blocks} is to ask for all transactions in the block the transaction is included in instead of the single transaction.
 
 In Electrum, and explorer-based wallets addresses are directly provided to the servers for efficiency.
 
