@@ -11,13 +11,13 @@
 \def\full{{\freeserif \char9679}}
 
 \begin{table*}
-\caption{A comparison of the cryptocurrency wallets in practice. Server lookups only refers to the computation the server is required to do to determine what to serve to a wallet during the synchronisation process and does not include previous or continuous computation like maintaining an address index. Partial satisfaction of a criterion is denoted with \half{} and full satisfaction is denoted with \full.\label{tbl:comparison}}
+\caption{A comparison of the cryptocurrency wallets in practice. Proposals with an asterisk* appear for the first time in this work. Server lookups only refers to the computation the server is required to do to determine what to serve to a wallet during the synchronisation process and does not include previous or continuous computation like maintaining an address index. Partial satisfaction of a criterion is denoted with \half{} and full satisfaction is denoted with \full.\label{tbl:comparison}}
 \centering
 \begin{tabular}{r|c|c|ccc|cccc}
 \multicolumn{3}{c}{} &
 Communication &
 Client computation &
-\rot{Server lookups*} &
+\rot{Server lookups} &
 \rot{Open participation} &
 \rot{Privacy} &
 \rot{Chain check} &
@@ -25,7 +25,7 @@ Client computation &
 \\ \hline
 \textbf{Proposal}&
 \textbf{TX Model}&
-\textbf{Kind}&
+\textbf{Privacy Model}&
 \multicolumn{3}{c|}{\textbf{Performance $\Theta(\cdot)$}}&
 \multicolumn{4}{c}{\textbf{Security}} \\
 \hline
@@ -34,15 +34,14 @@ Full Node&UTXO&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full\\
 SPV      &UTXO&Transparent&$n+y\lg{\alpha}$&$n+y\lg{\alpha}$&$m$&\full&\half&\full&     \\
 Electrum &UTXO&Transparent&$n+y\lg{\alpha}$&$n+y\lg{\alpha}$&$1$&     &     &\full&     \\
 Neutrino &UTXO&Transparent&$n+y\alpha$&$n+y\alpha$&$1$  &\full&\half&\full&\full\\
-Explorer-based    &UTXO&Transparent&$y$  &$1$  &$1$  &     &     &     &     \\
+Explorer-based&Both&Transparent&$y$  &$1$  &$1$  &     &     &     &     \\
 Full Node&Account&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full\\
-Explorer-based &Account&Transparent&$y$  &$1$  &$1$  &     &     &     &     \\
-Electrum-like (this work)&Account&Transparent&$n+y\lg{\alpha}+\lg{m}$  &$n+y\lg{\alpha}+\lg{m}$  &$1$  &     &     &\full&\full\\
+Electrum-like*&Account&Transparent&$n+y\lg{\alpha}+\lg{m}$  &$n+y\lg{\alpha}+\lg{m}$  &$1$  &     &     &\full&\full\\
 Full Node&UTXO&Private&$n+m$&$n+m$&$1$  &\full&\full&\full&\full\\
 SPV      &UTXO&Private&$n+m$&$n+m$&$1$&\full&\full&\full&\full\\
 MyMonero &UTXO&Private&$y$&$1$&$m$&     &     &     &     \\
-Superlight (this work)&Both&Transparent&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$1$&\full&     &\full&\full\\
-Superlight (this work)&UTXO&Private&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$m$&\full&     &\full&     \\
+Superlight*&Both&Transparent&$\polylog{n} + y + \lg{m}$&$\polylog{n} + y + \lg{m}$&$1$&\full&     &\full&\full\\
+Superlight*&UTXO&Private&$\polylog{n} + y\lg{\alpha}$&$\polylog{n} + y\lg{\alpha}$&$m$&\full&     &\full&     \\
 \hline
 \end{tabular}
 \end{table*}
@@ -91,7 +90,7 @@ Explorer-based wallets and MyMonero are all querying a trusted-third party and o
 
 SPV wallets for private cryptocurrencies that do not reveal the private viewing key to a server require that all full blocks be downloaded, resulting in $n+m$ communication complexity.
 
-Our superlight wallets based on some NIPoPoW superlight client have a communication complexity of $\polylog{n} + y\lg{\alpha}$. The reason is that the best chain and any block in it can be synced using only a sample of $\polylog{n}$ blocks, and for each transaction a Merkle proof is sent to link it to its corresponding block. This holds for both transparent and private constructions, where the private viewing key is revealed.
+Our superlight wallets based on some NIPoPoW superlight client have a communication complexity of $\polylog{n} + y + \lg{m}$, and our private superlight wallets have communication $\polylog{n} +y\lg{\alpha}$.
 
 \subsection{Client computation}
 Full nodes need to very all blocks and transactions in history resulting in $n+m$ computation.
@@ -104,7 +103,7 @@ For Neutrino the client computation is $n+y\alpha$, as every header is verified 
 
 Explorer-based wallets base their security on a trusted third party and perform no verification of what they obtain from the server, thus yielding a complexity of $1$. The same is true for privacy wallet MyMonero.
 
-Our superlight wallets based on NIPoPoWs verify NIPoPoW infix proofs and for each relevant transaction its inclusion in a block of the proof, resulting in a client computation of $\polylog{n} + y\lg{\alpha}$.
+Our private superlight wallets based on NIPoPoWs verify NIPoPoW infix proofs and for each relevant transaction its inclusion in a block of the proof, resulting in a client computation of $\polylog{n} + y\lg{\alpha}$. Our transparent superlight wallets only verify a single Merkle inclusion proof after syncing through the superlight client, resulting in $\polylog{n} + y + \lg{m}$ computation.
 
 \subsection{Server lookups}
 
@@ -152,8 +151,6 @@ Neutrino also maintains the best chain due to SPV security. For blocks that cont
 Explorer-based wallets do not have any notion of a chain locally and trust the transactions provided. Thus the server could provided transactions that are not part of the best chain and the wallet would have no way of knowing.
 
 Our superlight wallet constructions synchronise the best chain due to NIPoPoW security. All transactions provided are checked against blocks in that chain.
-
-%TODO: \subsection{Signature check}
 
 \subsection{Uncensorability}
 A full node cannot be censored as it obtains all transactions and holds the full blocks.
