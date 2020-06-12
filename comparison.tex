@@ -38,7 +38,7 @@ Neutrino &UTXO&Transparent&$n+y\alpha$&$n+y\alpha$&$1$  &\full&\half&\full&\full
 Yoroi    &UTXO&Transparent&$y$  &$1$  &$1$  &     &     &     &     &     \\
 Full Node&Account&Transparent&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
 Metamask &Account&Transparent&$y$  &$1$  &$1$  &     &     &     &     &     \\
-Electrum-like (this work)&Account&Transparent&$n+y\lg{\alpha}$  &$n+y\lg{\alpha}$  &$1$  &     &     &\full&\full&\full\\
+Electrum-like (this work)&Account&Transparent&$n+y\lg{\alpha}+\lg{m}$  &$n+y\lg{\alpha}+\lg{m}$  &$1$  &     &     &\full&\full&\full\\
 Full Node&UTXO&Private&$n+m$&$n+m$&$1$  &\full&\full&\full&\full&\full\\
 SPV      &UTXO&Private&$n+m$&$n+m$&$1$&\full&\full&\full&\full&\full\\
 MyMonero &UTXO&Private&$y$&$1$&$m$&     &     &     &     &     \\
@@ -87,6 +87,8 @@ SPV implementations for transparent cryptocurrencies require $n+y\lg{\alpha}$ of
 
 Electrum-based implementations for UTXO have the same communication complexity. In Neutrino, all block headers need to be downloaded as well. In addition, for every block including a relevant transaction it also needs to be downloaded in full. In the worst case each relevant transaction will be included in a different block yielding a communication complexity of $n+y\alpha$.
 
+Our Electrum based construction for accounts requires $n+y\lg{a}+\lg{m}$ communication, with the $\lg{m}$ representating the state trie proof size. We assume that the state trie grows as $\Theta(m)$.
+
 Yoroi, Metamask and MyMonero are all querying a trusted-third party and obtain the relevant transactions directly, thus have a communication complexity of $y$.
 
 SPV wallets for private cryptocurrencies that do not reveal the private viewing key to a server require that all full blocks be downloaded, resulting in $n+m$ communication complexity.
@@ -97,6 +99,8 @@ Our superlight wallets based on some NIPoPoW superlight client have a communicat
 Full nodes need to very all blocks and transactions in history resulting in $n+m$ computation.
 
 In SPV wallets, for each block header verification takes place and for each relevant transaction verification of its attached Merkle proof takes place, thus client computation is also $n+y\lg{\alpha}$. The same holds for Electrum-based wallets.
+
+Our Electrum based construction for accounts requires $n+y\lg{a}+\lg{m}$ computation.
 
 For Neutrino the client computation is $n+y\alpha$, as every header is verified and the full block including each transaction is also verified.
 
@@ -156,9 +160,11 @@ Our superlight wallet constructions synchronise the best chain due to NIPoPoW se
 \subsection{Uncensorability}
 A full node cannot be censored as it obtains all transactions and holds the full blocks.
 
-Unfortunately for most other solutions: SPV, Electrum, explorer-based, MyMonero the server can very easily not include transactions and the wallet has no way of knowing.
+Unfortunately for most other solutions: SPV, Electrum (UTXO-based), explorer-based, MyMonero the server can very easily not include transactions and the wallet has no way of knowing.
 
 For Neutrino however, as long as the filters are correct, transactions cannot be censored. If a filter matches the whole block is downloaded and verified.
+
+For our Electrum construction in the account model, a transaction-omitting server can be easily identified.
 
 Finally, for our ideal superlight wallet construction as proven in~\cref{superlight-uncensorability} no censorship of transactions can take place.
 For our superlight wallet construction for private cryptocurrencies no such commitment exists to prevent censorship and the server may lie by omitting transactions with no way to be detected.
