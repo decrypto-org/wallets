@@ -94,7 +94,6 @@ First, with a soft-fork or hard-fork a commitment to the filter can be included 
 Another way to utilize Neutrino filters without adjusting the block structure and thus eliminating the need for either a soft- or hard-fork is to ask all servers for the filter of each block and pick the one with the most votes as valid, if a majority of the server has voted on it. This requires us to harden our security assumptions about the set of servers the wallet is connected to. Whereas previously we required that at least one server is honest, now we require that the majority of servers is honest.
 
 \paragraph{The filter chain.}
-\input{algorithms/neutrino}
 \def\fltr{\text{filter}}
 In~\cite{bip157} a construction is put forth which is secure under our standard assumption of at least one honest server in $\mathcal{S}$. The construction introduces the notion of a filter chain, which is a hash chain of block filters. More formally if $\fltr(\chain[i])$ refers to the Neutrino filter of block $\chain[i]$, the filter chain $F$ for the block chain $\chain$ is defined for $0 \le i < |\chain|$ as
 \[
@@ -109,6 +108,8 @@ F[i] = \left\{
 where every element of the filter chain is called a \emph{filter header}. Neutrino servers compute this chain based on their filters.
 
 The construction on a high-level works as follows. After first syncing the header-chain $\chain$, the wallet connects with many Neutrino servers and requests all their filter chains. If two servers disagree on their filter chains we wish to tell who is honest and who is dishonest. The wallet finds the first filter header they disagree on, and obtains the filters for the corresponding block from both servers, as well as the full block. It then checks if one of the provided filters is invalid against the full block, and if it is the server that sent it is dishonest and the competing filter chain wins. This competition takes place for all disagreements and is how the honest filter chain is decided. Finally, the full filters can be downloaded from any server and verified against the local filter chain. The rest of the protocol proceeds as normal.
+
+\input{algorithms/neutrino}
 
 The improvements over SPV are twofold:
 \paragraph{Privacy.} In an SPV wallet, the transactions of interest to the wallet are directly leaked to the peer, except with some relative deniability due to the bloom filter's false positive rate. Due to the low false positive rate of a bloom filter and the widely known transaction linking heuristics that can be applied~\cite{meiklejohn2013fistful,gervais2014privacy}
