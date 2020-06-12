@@ -16,8 +16,6 @@ The transaction as a whole is valid if all inputs are valid and the sum of the v
 
 The most usual form of output is Pay-to-Public-Key-Hash (P2PKH) which, as its name implies, includes the public key hash of the recipient. For an input spending it to be valid, it needs to contain a signature of the corresponding secret key over the new transaction skeleton and the output to be spent.
 
-Money generation happens with coinbase transactions. A coinbase transaction is a special transaction that provides miners (in Proof-of-Work based cryptocurrencies) or minters (in Proof-of-Stake based cryptocurrencies) with a reward. Each block may have a single coinbase transaction. The coinbase transaction contains no inputs and generates only as much value as the block reward per the consensus rules, plus any transaction fees.
-
 \begin{algorithm}[H]
     \caption{\label{alg.btcapply} The $\btcapply$ function given a state $\btcstate$ and a transaction $tx$.}
     \begin{algorithmic}[1]
@@ -76,8 +74,6 @@ A valid transaction according to a state can be applied to it to generate a new 
     \end{algorithmic}
 \end{algorithm}
 
-Coinbase transactions could exist in account-based cryptocurrencies, for example having a $\sender$ field of all zeros. In practice Ethereum-based cryptocurrencies don't have them but instead directly include the miner's address inside the block header. For our purposes we will not consider the change of state due to miner rewards.
-
 \subsection{The Blockchain}
 \def\Gen{\textsf{Gen}}
 
@@ -122,6 +118,8 @@ Application of a sequence of transactions occurs by applying each transaction an
 \]
 
 A block $b$ is split in two parts, the header and the body. The header is a fixed-size string, and the body is the place where all transactions reside. All the transactions in a block's body are committed to in the block's header, usually in the form of a Merkle Tree root over all of them. A block with its body is what we call a \emph{full block}. We will use $\chain[i]$ to refer to a block header or the full block at height $i$ interchangeably, as well as $\chain$ to refer to both the header chain and the full block chain.
+
+Money generation happens with coinbase transactions. A coinbase transaction is a special transaction that provides miners (in Proof-of-Work based cryptocurrencies) or minters (in Proof-of-Stake based cryptocurrencies) with a reward. Each block may have a single coinbase transaction. For cryptocurrencies in the UTXO model the coinbase transaction contains no inputs and generates only as much value as the block reward per the consensus rules, plus any transaction fees. Coinbase transactions could also exist in account-based cryptocurrencies, for example having a $\sender$ field of all zeros. In practice Ethereum-based cryptocurrencies don't have them but instead directly include the miner's address inside the block header. For our purposes we will not consider the change of state due to miner rewards.
 
 \subsection{Network Actors}
 \paragraph{Full Nodes}
