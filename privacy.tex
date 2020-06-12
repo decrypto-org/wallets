@@ -2,6 +2,8 @@
 \label{privacy}
 In this section we will discuss wallets for ZCash~\cite{zcash,zcash-spec} and Monero~\cite{monero}, two of the most prominent private cryptocurrencies. ZCash is based on the Zerocoin protocol~\cite{zerocoin} which is in the UTXO model. Monero is based on the Cryptonote~\cite{cryptonote} protocol, also in the UTXO model~\cite{zero-to-monero}. To our knowlege no private cryptocurrencies exist in practice with wallets, so naturally this section will only focus on wallets for private cryptocurrencies in the UTXO model.
 
+In private cryptocurrencies transaction data such as sender, receiver and amounts are not publicly disclosed as is the case with their transparent counterparts. Instead, only the sender and receiver of the transaction can know this information. Additionally we have two kinds of keypairs: the \emph{viewing key} and the \emph{spending key}. An address is comprised of the public viewing and spending keys. The private information of a transaction can only be obtained by use of the private viewing key. In order to spend funds, the private spending key must be used.
+
 We first examine the requirements for a ZCash wallet to be functional. To create a new transaction sending funds to some party, the wallet needs to know the unspent outputs belonging to the user. From these outputs the amount and some auxillary values must be discovered, in order to allow the wallet to create a nullifier for the commitment and spend it. In order to create a valid transaction with a valid Zero Knowledge proof the wallet also needs to know the full contents of the commitment tree, to prove that they are spending a commitment included in that tree.
 
 \subsection{Full Node}
