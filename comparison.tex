@@ -81,7 +81,7 @@ A comparison of the wallets in tabular form is presented in \cref{tbl:comparison
 \subsection{Communication}
 The full node requires the most amount of communication, $n+m$ as all full blocks must be downloaded. This is the case for both UTXO and account models.
 
-SPV implementations for transparent cryptocurrencies require $n+y\lg{\alpha}$ of communication, which is broken down as (a) each block header (b) each relevant transaction and (c) a Merkle inclusion proof for each transaction. In the worst case each transaction belongs to a different block and no re-use of parts of the proof can take place thus we need $y$ proofs of size $\lg{\alpha}$ each.
+SPV implementations for transparent cryptocurrencies require $n+y\lg{\alpha}$ communication, which is broken down as (a) each block header (b) each relevant transaction and (c) a Merkle inclusion proof for each transaction. In the worst case each transaction belongs to a different block and no re-use of parts of the proof can take place thus we need $y$ proofs of size $\lg{\alpha}$ each.
 
 Electrum-based implementations for UTXO have the same communication complexity. In Neutrino, all block headers need to be downloaded as well. In addition, for every block including a relevant transaction it also needs to be downloaded in full. In the worst case each relevant transaction will be included in a different block yielding a communication complexity of $n+y\alpha$.
 
