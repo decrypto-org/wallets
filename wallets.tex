@@ -1,5 +1,6 @@
-\documentclass[sigconf,anonymous]{acmart}
-%\documentclass[sigconf]{acmart}
+\documentclass{llncs}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \algrenewcommand\textproc{} % disable textsc on function names
@@ -24,7 +25,6 @@
 \newcommand{\cupeq}{\texttt{\,$\cup$=\,}}
 \providecommand{\tpl}[1]{\ensuremath{\langle#1\rangle}}
 \providecommand{\rsample}{\stackrel{\mbox{\tiny $\$$}}{\leftarrow}}
-\newtheorem{remark}{Remark}
 
 \DeclareMathOperator{\polylog}{polylog}
 
@@ -36,16 +36,16 @@
 \title{SoK: A Taxonomy of Cryptocurrency Wallets}
 
 \author{Kostis Karantias}
-\affiliation{\institution{IOHK}}
-\email{kostis.karantias@iohk.io}
+\institute{
+    IOHK\\
+    \email{kkarantias@gmail.com}
+}
 
-\renewcommand{\shortauthors}{Karantias}
+\maketitle
 
 \begin{abstract}
     \input{abstract}
 \end{abstract}
-
-\maketitle
 
 \input{intro}
 \input{preliminaries}
@@ -56,10 +56,9 @@
 \input{light}
 \input{comparison}
 
-\begin{acks}
-\end{acks}
+\section*{Acknowledgements}
 
-\bibliographystyle{ACM-Reference-Format}
+\bibliographystyle{plain}
 \bibliography{refs}
 
 \appendix
