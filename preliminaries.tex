@@ -2,12 +2,6 @@
 \subsection{The UTXO Model}
 In the UTXO model a transaction consists of inputs and outputs. An output consists of an amount and a locking script (called \texttt{scriptPubKey} in Bitcoin). In Bitcoin the locking script is described in a stack-based language called Bitcoin Script. An input consists of an unlocking script (called \texttt{scriptSig} in Bitcoin) and an output pointer (also called an outpoint) which is a tuple of the form \tpl{\texttt{txID}, \texttt{outputIndex}}. We say that an input \emph{spends} an output, where \texttt{txID} refers to the transaction id that includes the output and \texttt{outputIndex} refers to the zero-based index of the output to be spent in that transaction.
 
-\def\btcstate{\ensuremath{\sigma_\text{btc}}}
-\def\btcapply{\text{apply}\textsubscript{btc}}
-\def\outputs{\texttt{outputs}}
-\def\inputs{\texttt{inputs}}
-\def\spentOutputs{\texttt{spentOutputs}}
-\def\utxo{\texttt{utxo}}
 The global state of UTXO based cryptocurrencies includes all transaction outputs, and all spent transaction outputs. UTXO stands for unspent transaction outputs, which be trivially computed from any state $\btcstate$ as $\btcstate.\utxo \triangleq \btcstate.\outputs \setminus \btcstate.\spentOutputs$.
 
 An input is valid with regards to a state $\btcstate$ (a) if the output it references exists (i.e. $\in \btcstate.\outputs$) and is not already spent (i.e. $\notin \btcstate.\spentOutputs$) and (b) if the unlocking script of the input ``unlocks'' the locking script of the output. In the case of Bitcoin, the unlocking script runs on an empty stack, and subsequently the locking script runs on the resulting stack of the unlocking script's execution. The input is considered to unlock the output if the locking script terminates successfully.
@@ -34,15 +28,6 @@ The most usual form of output is Pay-to-Public-Key-Hash (P2PKH) which, as its na
 \subsection{The Account Model}
 In the account model, a transfer transaction consists of a sender, a receiver, an amount, a nonce, a fee and a signature. The sender and receiver are public keys. The fee acts as an additional miner reward as in the UTXO model.
 
-\def\state{\text{state}}
-\def\chain{\ensuremath{\mathcal{C}}}
-\def\sender{\texttt{sender}}
-\def\receiver{\texttt{receiver}}
-\def\amount{\texttt{amount}}
-\def\fee{\texttt{fee}}
-\def\nonce{\text{nonce}}
-\def\bal{\text{balance}}
-\def\ethstate{\ensuremath{\sigma_\text{eth}}}
 Each address has its own state. The state of an address is defined as $\tpl{\bal, \nonce}$. For a previously unused address all fields are assumed to be of zero value, specifically: $\ethstate[\texttt{address}] = \{\bal{:}\,0, \nonce{:}\,0\}$. With $\ethstate[\texttt{address}]$ we denote the state of the account with the specified address.
 
 For a transfer transaction to be valid with respect to a state $\ethstate$, the following conditions need to hold.
@@ -57,8 +42,6 @@ For a transfer transaction to be valid with respect to a state $\ethstate$, the 
 \end{itemize}
 
 We remark that the nonce is necessary in order to avoid replay attacks~\cite{ethereum-glossary}, for if it was absent some receiver would be able to repeat the same transaction ad infinitum until the sender account is completely drained. Note that a potential solution to this would be to maintain a set of processed transaction ids and add a requirement that the transaction to be evaluated for validity does not belong in that set. If the sender ever wishes to send the same amount to the same recipient, they will need to generate a new signature and thus the transaction will have a different transaction id. In theory this solution stands, however in practice due to the malleability of ECDSA a signature can be modified in a way that it changes and consequently the transaction id changes, while retaining its validity~\cite{malleability}.
-
-\def\ethapply{\text{apply}\textsubscript{eth}}
 
 A valid transaction according to a state can be applied to it to generate a new state. We perform this state transformation with a function $\ethapply(\ethstate, tx)$ which debits the sender, credits the receiver and increments the sender's nonce. The full definition of $\ethapply$ is given in \cref{alg.ethapply}.
 
@@ -75,7 +58,6 @@ A valid transaction according to a state can be applied to it to generate a new 
 \end{algorithm}
 
 \subsection{The Blockchain}
-\def\Gen{\textsf{Gen}}
 
 Transactions are usually arranged in batches and included in so-called \emph{blocks}. Blocks are arranged in a structure which resembles a linked list, in which each block contains a pointer to its previous block in the form of its hash. The only exception to this rule is the first block of the list, which is called the \emph{genesis} and does not include any such pointer. This linked list is called the \emph{chain}, which we usually denote with \chain. With $\chain[i]$ we denote the $i$-th block of the chain, and we customarily denote the genesis block as $\Gen \triangleq \chain[0]$.
 
