@@ -1,3 +1,6 @@
+\newif\ifanon
+\anontrue
+
 \documentclass{llncs}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -36,11 +39,16 @@
 
 \title{SoK: A Taxonomy of Cryptocurrency Wallets}
 
-\author{Kostis Karantias}
-\institute{
-    IOHK\\
-    \email{kkarantias@gmail.com}
-}
+\ifanon
+    \author{}
+    \institute{}
+\else
+    \author{Kostis Karantias}
+    \institute{
+        IOHK\\
+        \email{kkarantias@gmail.com}
+    }
+\fi
 
 \maketitle
 
