@@ -93,7 +93,7 @@ SPV wallets for private cryptocurrencies that do not reveal the private viewing 
 Our superlight wallets based on some NIPoPoW superlight client have a communication complexity of $\polylog{n} + y + \lg{m}$, and our private superlight wallets have communication $\polylog{n} +y\lg{\alpha}$.
 
 \subsection{Client computation}
-Full nodes need to very all blocks and transactions in history resulting in $n+m$ computation.
+Full nodes need to verify all blocks and transactions in history resulting in $n+m$ computation.
 
 In SPV wallets, for each block header verification takes place and for each relevant transaction verification of its attached Merkle proof takes place, thus client computation is also $n+y\lg{\alpha}$. The same holds for Electrum-based wallets.
 
