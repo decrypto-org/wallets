@@ -1,6 +1,6 @@
 \section{Privacy Wallets}
 \label{privacy}
-In this section we will discuss wallets for ZCash~\cite{zcash,zcash-spec} and Monero~\cite{monero}, two of the most prominent private cryptocurrencies. ZCash is based on the Zerocoin protocol~\cite{zerocoin} which is in the UTXO model. Monero is based on the Cryptonote~\cite{cryptonote} protocol, also in the UTXO model~\cite{zero-to-monero}. To our knowlege no private cryptocurrencies exist in practice with wallets, so naturally this section will only focus on wallets for private cryptocurrencies in the UTXO model.
+In this section we will discuss wallets for ZCash~\cite{zcash,zcash-spec} and Monero~\cite{monero}, two of the most prominent private cryptocurrencies. ZCash is based on the Zerocoin protocol~\cite{zerocoin} which is in the UTXO model. Monero is based on the Cryptonote~\cite{cryptonote} protocol, also in the UTXO model~\cite{zero-to-monero}. To our knowlege no private cryptocurrencies exist in practice in the accounts model, so naturally this section will only focus on wallets for private cryptocurrencies in the UTXO model.
 
 In private cryptocurrencies transaction data such as sender, receiver and amounts are not publicly disclosed as is the case with their transparent counterparts. Instead, only the sender and receiver of the transaction can know this information. Additionally we have two kinds of keypairs: the \emph{viewing key} and the \emph{spending key}. An address is comprised of the public viewing and spending keys. The private information of a transaction can only be obtained by use of the private viewing key. In order to spend funds, the private spending key must be used.
 
@@ -31,7 +31,7 @@ This compression of the transactions is lossy and means that the transactions in
 We remark that this is not an asymptotic improvement over the theoretical SPV solution. We posit that an asymptotic improvement over the theoretical SPV solution which preserves privacy (i.e. no private keys are revealed to the remote peer) cannot exist.
 
 \paragraph{In practice.}
-ZecWallet Lite~\cite{zecwallet} is a desktop wallet with a mobile companion app that utilizes the Compact Blocks proposal. On the backend it uses lightwalletd~\cite{lightwalletd}, which offers transforms full blocks to the compact format.
+ZecWallet Lite~\cite{zecwallet} is a desktop wallet with a mobile companion app that utilizes the Compact Blocks proposal. On the backend it uses lightwalletd~\cite{lightwalletd}, which transforms full blocks to the compact format.
 
 \subsection{MyMonero}
 \label{mymonero}

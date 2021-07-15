@@ -2,7 +2,7 @@
 \subsection{The UTXO Model}
 In the UTXO model a transaction consists of inputs and outputs. An output consists of an amount and a locking script (called \texttt{scriptPubKey} in Bitcoin). In Bitcoin the locking script is described in a stack-based language called Bitcoin Script. An input consists of an unlocking script (called \texttt{scriptSig} in Bitcoin) and an output pointer (also called an outpoint) which is a tuple of the form \tpl{\texttt{txID}, \texttt{outputIndex}}. We say that an input \emph{spends} an output, where \texttt{txID} refers to the transaction id that includes the output and \texttt{outputIndex} refers to the zero-based index of the output to be spent in that transaction.
 
-The global state of UTXO based cryptocurrencies includes all transaction outputs, and all spent transaction outputs. UTXO stands for unspent transaction outputs, which be trivially computed from any state $\btcstate$ as $\btcstate.\utxo \triangleq \btcstate.\outputs \setminus \btcstate.\spentOutputs$.
+The global state of UTXO based cryptocurrencies includes all transaction outputs, and all spent transaction outputs. UTXO stands for unspent transaction outputs, which can be trivially computed from any state $\btcstate$ as $\btcstate.\utxo \triangleq \btcstate.\outputs \setminus \btcstate.\spentOutputs$.
 
 An input is valid with regards to a state $\btcstate$ (a) if the output it references exists (i.e. $\in \btcstate.\outputs$) and is not already spent (i.e. $\notin \btcstate.\spentOutputs$) and (b) if the unlocking script of the input ``unlocks'' the locking script of the output. In the case of Bitcoin, the unlocking script runs on an empty stack, and subsequently the locking script runs on the resulting stack of the unlocking script's execution. The input is considered to unlock the output if the locking script terminates successfully.
 
@@ -41,7 +41,7 @@ For a transfer transaction to be valid with respect to a state $\ethstate$, the 
     \]
 \end{itemize}
 
-We remark that the nonce is necessary in order to avoid replay attacks~\cite{ethereum-glossary}, for if it was absent some receiver would be able to repeat the same transaction ad infinitum until the sender account is completely drained. Note that a potential solution to this would be to maintain a set of processed transaction ids and add a requirement that the transaction to be evaluated for validity does not belong in that set. If the sender ever wishes to send the same amount to the same recipient, they will need to generate a new signature and thus the transaction will have a different transaction id. In theory this solution stands, however in practice due to the malleability of ECDSA a signature can be modified in a way that it changes and consequently the transaction id changes, while retaining its validity~\cite{malleability}.
+We remark that the nonce is necessary in order to avoid replay attacks~\cite{ethereum-glossary}, for if it were absent some receiver would be able to repeat the same transaction ad infinitum until the sender account was completely drained. Note that a potential solution to this would be to maintain a set of processed transaction ids and add a requirement that the transaction to be evaluated for validity does not belong in that set. If the sender ever wishes to send the same amount to the same recipient, they will need to generate a new signature and thus the transaction will have a different transaction id. In theory this solution stands, however in practice due to the malleability of ECDSA a signature can be modified in a way that it changes and consequently the transaction id changes, while retaining its validity~\cite{malleability}.
 
 A valid transaction according to a state can be applied to it to generate a new state. We perform this state transformation with a function $\ethapply(\ethstate, tx)$ which debits the sender, credits the receiver and increments the sender's nonce. The full definition of $\ethapply$ is given in \cref{alg.ethapply}.
 
@@ -68,11 +68,12 @@ We adopt the Python notation to refer to parts of the chain, which is illustrate
     \centering
     \begin{tabular}{r|l}
     \chain & the chain \\
+    $|\chain|$ & the chain length \\
     $\chain[i]$ & the $i$-th block of the chain ($i \ge 0$)\\
     \Gen & the genesis block ($\chain[0]$) \\
     $\chain[-i]$ & the $i$-th block from the end of the chain ($i > 0$) \\
     $\chain[i:j]$ & all chain blocks starting from $\chain[i]$ up to but not including $\chain[j]$ \\
-    $\chain[:j]$ & all chain blocks from the genesis up to but not including $\chain[j]$ (equivalent to $\chain[0:j]$) \\
+    $\chain[:j]$ & all chain blocks from genesis up to but not including $\chain[j]$ (equivalent to $\chain[0:j]$) \\
     $\chain[i:]$ & all chain blocks from $\chain[i]$ up to and including the last (equivalent to $\chain[i:|\chain|]$) \\
     $k$ & the stability parameter of the blockchain protocol \\
     \end{tabular}
